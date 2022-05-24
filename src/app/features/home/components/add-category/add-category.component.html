@@ -1,0 +1,78 @@
+<div class="p-fluid tw-mt-5 tw-pr-0 lg-tw-pr-5" [formGroup]="categoryForm">
+  <ng-container [ngSwitch]="step">
+    <ng-template [ngSwitchCase]="'info'" formGroupName="info">
+      <div class="field">
+        <label for="title">Tile</label>
+        <input name="title" type="text" pInputText formControlName="title"/>
+      </div>
+      <div class="field">
+        <label for="description">Description</label>
+        <input name="description" type="text" pInputText formControlName="description"/>
+      </div>
+      <div class="field">
+        <label for="cover">Cover image</label>
+        <app-file-upload formControlName="cover_image"></app-file-upload>
+      </div>
+      <div class="tw-mt-5 tw-flex tw-justify-end">
+        <button pButton [disabled]="info.invalid" class="p-button-outlined tw-mt-4" style="width: auto" label="Next" (click)="nextStep()"></button>
+      </div>
+    </ng-template>
+  
+    <ng-template [ngSwitchCase]="'field'">
+      <div formArrayName="fields">
+        <ng-container *ngFor="let fieldForm of fields.controls; let index = index">
+          <div [formGroupName]="index" class="grid p-fuild" pDraggable="dd"
+              (onDragStart)="dragStart($event, index)"
+              (onDragEnd)="dragEnd($event)"
+              pDroppable="dd"
+              dragHandle=".dr-handle"
+              dragEffect="move"
+              dropEffect="move"
+              (onDrop)="drop($event, index)">
+            <div class="col-12 tw-my-0 tw-flex tw-justify-between tw-items-center">
+              <h3>Field <span class="tw-font-medium">{{fieldForm.get('name')?.value || index + 1}}</span></h3>
+              <div class="dr">
+                <button pButton class="p-button-text dr-handle" icon="pi pi-arrows-v" *ngIf="fields.controls.length > 1"></button>
+                <button pButton class="p-button-text" icon="pi pi-trash" (click)="removeField(index)"></button>
+              </div>
+            </div>
+            <div class="col-6 tw-my-0">
+              <label class="tw-mb-2" for="name_{{index}}">Name</label>
+              <input name="name_{{index}}" type="text" pInputText formControlName="name"/>
+            </div>
+            <div class="col-6 tw-my-0">
+              <label class="tw-mb-2" for="label_{{index}}">Label</label>
+              <input name="label_{{index}}" type="text" pInputText formControlName="label"/>
+            </div>
+            <div class="col-6 tw-my-0">
+              <label class="tw-mb-2" for="type_{{index}}">Type</label>
+              <p-dropdown [options]="typeOptions"
+                formControlName="type"
+                inputId="type_{{index}}"
+                [placeholder]="'Select field type'">
+              </p-dropdown>
+            </div>
+            <div class="col-6 field-checkbox tw-items-end">
+              <p-checkbox formControlName="mandatory" [binary]="true" inputId="mandatory_{{index}}"></p-checkbox>
+              <label for="mandatory_{{index}}">Is Mandatory</label>
+            </div>
+            <div class="col-12 tw-my-0" *ngIf="fieldForm.value.type === 'Array'">
+              <label for="options">Options</label>
+              <p-chips inputId="options" formControlName="options"></p-chips>
+            </div>
+            <div class="col-12">
+              <p-divider class="tw-py-5"></p-divider>
+            </div>
+          </div>
+        </ng-container>
+        <div class="tw-flex tw-justify-end">
+          <button pButton class="p-button-text tw-my-3" style="width: auto;" label="Add New Field" icon="pi pi-plus" (click)="addNewField()"></button>
+        </div>
+      </div>
+      <div class="tw-flex tw-justify-between tw-mt-5">
+        <button pButton class="p-button-text tw-mt-4" icon="pi pi-chevron-left" style="width: auto" label="Back" (click)="step = 'info'"></button>
+        <button pButton class="p-button-outlined tw-mt-4" [disabled]="fields.status === 'INVALID'" [loading]="categoryService.addingCategory$ | async" style="width: auto" label="Done" (click)="onSubmit()"></button>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

@@ -1,0 +1,16 @@
+<div class="tw-container">
+  <h1 class="tw-font-bold tw-text-xl tw-my-5">Settings</h1>
+  <p-panel [showHeader]="false">
+    <div class="grid">
+      <div class="col-12 lg:col-3">
+        <div class="tw-flex tw-flex-row tw-items-center tw-justify-center lg:tw-justify-start lg:tw-items-start lg:tw-flex-col">
+          <a routerLinkActive="tw-bg-slate-300 tw-rounded-md tw-font-medium" class="tw-m-4 tw-p-2" routerLink="./basic">Basic Information</a>
+          <a routerLinkActive="tw-bg-slate-300 tw-rounded-md tw-font-medium" class="tw-m-4 tw-p-2" routerLink="./kyc">KYC Verification</a>
+        </div>
+      </div>
+      <div class="col-12 lg:col-9">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </p-panel>
+</div>

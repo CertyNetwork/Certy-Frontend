@@ -1,0 +1,1 @@
+// BpQrCode: ES Module

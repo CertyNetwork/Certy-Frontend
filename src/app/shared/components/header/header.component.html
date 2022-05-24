@@ -1,0 +1,46 @@
+<header class="header">
+  <div class="header__wrapper">
+    <div class="logo_container">
+      <a routerLink="/">
+        <img class="tw-h-10 tw-w-auto tw-sm:h-10" src="/assets/images/logo.png" alt="Logo Brand">
+      </a>
+    </div>
+    <nav class="navigation_wrapper tw-absolute md:tw-relative tw-w-full tw-left-0 md:tw-w-auto tw-items-center tw-top-full tw-mt-0 tw-flex tw-flex-col-reverse md:tw-flex-row md:tw-space-x-10 md:tw-flex" [ngClass]="{'tw-hidden': !isOpen}">
+      <a class="navigation__styledLink tw-py-5 md:tw-py-0" (click)="create_menu.toggle($event)">Create</a>
+      <p-menu #create_menu [appendTo]="'body'" [popup]="true" [model]="createItems"></p-menu>
+      <a class="navigation__styledLink tw-py-5 md:tw-py-0" routerLink="/dashboard">Dashboard</a>
+      <a class="navigation__styledLink tw-py-5 md:tw-py-0" *ngIf="!(authenticated$ | async)">
+        <button pButton class="p-button-outlined tw-py-2" label="Connect Wallet" (click)="connect()"></button>
+      </a>
+      <a class="navigation__styledLink tw-py-5 md:tw-py-0">
+        <app-theme-switcher></app-theme-switcher>
+      </a>
+      <div class="tw-flex tw-items-center tw-py-5 md:tw-py-0" *ngIf="account$ | async as account">
+        <p-chip #accountInfo styleClass="navigation__styledLink tw-py-1 tw-cursor-pointer" routerLinkActive="active-link" (click)="accountMenu.toggle($event)">
+          <i class="pi pi-link mr-2"></i>
+          <div class="tw-flex tw-flex-col">
+            <span class="p-text-primary tw-text-sm">{{account.accountId}}</span>
+            <span class="p-text-secondary tw-text-sm">{{account.balance}}</span>
+          </div>
+          <span class="tw-pl-3 pi" [ngClass]="{'pi-angle-up': accountMenu.visible, 'pi-angle-down': !accountMenu.visible}"></span>
+        </p-chip>
+        <p-menu #accountMenu [appendTo]="'body'" [popup]="true" [model]="accountMenuItems"></p-menu>
+      </div>
+    </nav>
+    <div class="md:tw-hidden">
+      <button
+        type="button"
+        class="tw-bg-white tw-rounded-md p-2 tw-inline-flex tw-items-center tw-justify-center tw-text-gray-400 tw-hover:text-gray-500 tw-hover:bg-gray-100 tw-focus:outline-none tw-focus:ring-2 tw-focus:ring-inset tw-focus:ring-indigo-500"
+        aria-expanded="false"
+        (click)="isOpen = !isOpen;">
+        <span class="tw-sr-only">Open menu</span>
+        <svg *ngIf="!isOpen" class="tw-h-6 tw-w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="tw-round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg *ngIf="isOpen" class="tw-h-6 tw-w-6" x-description="Heroicon name: outline/x" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="tw-round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>

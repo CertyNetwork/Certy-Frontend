@@ -1,0 +1,11 @@
+:host {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 0px);
+  z-index: -1;
+
+  .scene {
+    width: 100%;
+    height: 100%;
+  }
+}

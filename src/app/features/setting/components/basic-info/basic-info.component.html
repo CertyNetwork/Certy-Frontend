@@ -1,0 +1,44 @@
+<div class="tw-mb-8 tw-flex tw-flex-row tw-justify-start tw-items-center">
+  <p-avatar image="{{ this.authService.wallet?.getAccountId() | profileCover:shouldReLoad | async }}" styleClass="tw-mr-10 tw-cursor-pointer" size="xlarge" shape="circle"></p-avatar>
+  <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Upload new picture"
+    [customUpload]="true"
+    (uploadHandler)="uploadAvatar($event, avatarUploader)"
+    [auto]="true"
+    [fileLimit]="1"
+    #avatarUploader
+    styleClass="tw-text-sm" chooseLabel="Upload new picture" class="inline-block"></p-fileUpload>
+  <button pButton label="Remove" class="tw-ml-3 tw-text-sm p-button-outlined p-button-secondary" (click)="removeAvatar()"></button>
+</div>
+<form class="p-fluid" [formGroup]="profileForm">
+  <div class="field">
+    <label class="" for="name">Display Name</label>
+    <input type="text" id="name" formControlName="display_name" pInputText>
+  </div>
+  <div class="field">
+    <label class="" for="email">Email</label>
+    <input type="text" id="email" formControlName="email" pInputText>
+  </div>
+  <div class="field">
+    <label class="" for="location">Location</label>
+    <input type="text" id="location" formControlName="location" pInputText>
+  </div>
+  <div class="field">
+    <label class="" for="bio">Bio</label>
+    <p-editor formControlName="bio" [style]="{'height':'220px'}"></p-editor>
+  </div>
+  <div class="field">
+    <label class="" for="signature">Signature</label>
+    <ngx-dropzone (change)="onSelect($event)">
+      <ngx-dropzone-label>
+        <span class="tw-block tw-mb-3">Drop files or <span class="text-lime-500">browse your device</span></span>
+        <span class="tw-block">Supported types: .jpg, .png, .gif (Max 40MB), .mov, .mp4 (Max 100MB)</span>
+      </ngx-dropzone-label>
+      <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+      </ngx-dropzone-preview>
+    </ngx-dropzone>
+  </div>
+  <div class="tw-justify-end tw-flex tw-mt-12">
+    <button [loading]="userService.updatingProfile$ | async" [disabled]="profileForm.invalid" pButton label="Save" style="max-width: 8rem" class="tw-text-sm" (click)="updateProfile()"></button>
+  </div>
+</form>

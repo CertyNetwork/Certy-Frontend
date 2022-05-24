@@ -1,0 +1,2 @@
+// BpQrCode: Host Data, ES Module/es5 Target
+export var BpQRCode = ["bp-qr-code","m3vuuhwg",1,[["animateQRCode",32],["contents",1,0,1,2],["data",16],["getModuleCount",32],["legacy",1,0,1,4],["maskXToYRatio",1,0,"mask-x-to-y-ratio",8],["moduleColor",1,0,"module-color",2],["moduleCount",16],["positionCenterColor",1,0,"position-center-color",2],["positionRingColor",1,0,"position-ring-color",2],["protocol",1,0,1,2],["qrCodeElement",64]],1];

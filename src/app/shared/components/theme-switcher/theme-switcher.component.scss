@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+align-items: center;
+
+  .wrapper {
+    height: 18px;
+    width: 18px;
+    line-height: 1;
+    cursor: pointer;
+  
+    .pi {
+      color: var(--text-color);
+    }
+  }
+}

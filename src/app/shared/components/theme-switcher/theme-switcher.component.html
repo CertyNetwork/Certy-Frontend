@@ -1,0 +1,4 @@
+<div class="wrapper flex items-center" *ngIf="theme$|async as theme">
+  <span (click)="switchMode('dark')"  *ngIf="theme === 'light'" class="pi pi-sun"></span>
+  <span (click)="switchMode('light')"  *ngIf="theme === 'dark'" class="pi pi-moon"></span>
+</div>

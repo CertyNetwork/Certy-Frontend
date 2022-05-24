@@ -1,0 +1,8 @@
+<ngx-dropzone [multiple]="false" (change)="onSelect($event)" re>
+  <ngx-dropzone-label>
+    <span class="tw-block mb-3">Drop files or <span class="tw-text-lime-500">browse your device</span></span>
+  </ngx-dropzone-label>
+  <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove($event)">
+    <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+  </ngx-dropzone-preview>
+</ngx-dropzone>
