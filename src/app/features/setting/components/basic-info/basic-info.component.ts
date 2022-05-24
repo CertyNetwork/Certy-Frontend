@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileUpload } from 'primeng/fileupload';
 import { Subscription } from 'rxjs';
@@ -42,6 +42,7 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
         this.profileForm.patchValue(profile);
       }
     })));
+    this.userService.getUserProfile();
   }
 
   onSelect(event: any) {

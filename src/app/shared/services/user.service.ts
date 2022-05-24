@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp, initializeApp, getApp } from 'firebase/app';
 import { getFirestore, collection, Firestore, getDoc, doc, setDoc, DocumentReference } from 'firebase/firestore';
 import { FirebaseStorage, getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Profile } from '../models/profile';
 import { AuthService } from './auth.service';
@@ -15,7 +15,7 @@ export class UserService {
   public firebase: FirebaseApp | undefined;
   public store: Firestore | undefined;
   public storage: FirebaseStorage | undefined;
-  private profile = new BehaviorSubject<Profile | null>(null);
+  private profile = new Subject<Profile>();
   private updatingProfile = new BehaviorSubject<boolean>(false);
   public profile$ = this.profile.asObservable();
   public updatingProfile$ = this.updatingProfile.asObservable();
@@ -35,10 +35,6 @@ export class UserService {
 
     this.store = getFirestore(this.firebase);
     this.storage = getStorage(this.firebase);
-
-    this.getUserProfile().then((profile) => {
-      this.profile.next(profile as Profile);
-    });
   }
 
   /**
@@ -56,9 +52,8 @@ export class UserService {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        return data;
+        this.profile.next(data as Profile);
       }
-      return null;
     } catch(e) {
       console.log(e);
     }

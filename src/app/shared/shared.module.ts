@@ -37,6 +37,7 @@ import { ToastModule } from 'primeng/toast';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChipsModule } from 'primeng/chips';
 import { DragDropModule } from 'primeng/dragdrop';
+import { SkeletonModule } from 'primeng/skeleton';
 import { NearLoginComponent } from './components/near-login/near-login.component';
 import { CategoryCoverPipe } from './pipes/category-cover.pipe';
 import { ImageFallbackDirective } from './directives/image-fallback';
@@ -96,6 +97,7 @@ import { ProfileCoverPipe } from './pipes/profile-image.pipe';
     OverlayPanelModule,
     ChipsModule,
     DragDropModule,
+    SkeletonModule,
   ],
   exports: [
     CommonModule,
@@ -130,6 +132,7 @@ import { ProfileCoverPipe } from './pipes/profile-image.pipe';
     OverlayPanelModule,
     ChipsModule,
     DragDropModule,
+    SkeletonModule,
 
     // Pipes
     CategoryCoverPipe,

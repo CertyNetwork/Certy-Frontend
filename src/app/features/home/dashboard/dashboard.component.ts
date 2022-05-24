@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { AddCategoryComponent } from '../components/add-category/add-category.component';
 
@@ -11,11 +9,6 @@ import { AddCategoryComponent } from '../components/add-category/add-category.co
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  isMenu: boolean = false;
-  isMenuBtn() {
-    this.isMenu = !this.isMenu;
-  }
-  isSearch: boolean = false;
   categories$ = this.categoryService.categories$;
   layout: string = 'grid';
   filterText: string = '';
@@ -26,6 +19,7 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.categoryService.getCategories();
   }
 
   onFilterChange() {

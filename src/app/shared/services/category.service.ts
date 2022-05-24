@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { FirebaseApp, initializeApp, getApp } from 'firebase/app';
-import { getFirestore, collection, Firestore, getDocs, addDoc, orderBy, query, doc, getDoc, where } from 'firebase/firestore';
+import { getFirestore, collection, Firestore, getDocs, addDoc, query, doc, getDoc, where } from 'firebase/firestore';
 import { FirebaseStorage, getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, map, Subject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Category } from '../models/category';
 import { UserService } from './user.service';
@@ -15,7 +15,7 @@ export class CategoryService implements OnDestroy {
   public firebase: FirebaseApp | undefined;
   public store: Firestore | undefined;
   public storage: FirebaseStorage | undefined;
-  private categories = new BehaviorSubject<Category[]>([]);
+  private categories = new Subject<Category[]>();
   private addingCategory = new BehaviorSubject<boolean>(false);
   public categories$ = this.categories.asObservable();
   public addingCategory$ = this.addingCategory.asObservable();
@@ -38,11 +38,6 @@ export class CategoryService implements OnDestroy {
 
     this.store = getFirestore(this.firebase);
     this.storage = getStorage(this.firebase);
-
-    this.subs.add(this.filterCategoriesSubject.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-    ).subscribe((filter) => this.getCategories(filter)));
   }
 
   ngOnDestroy(): void {
