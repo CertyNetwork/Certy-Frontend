@@ -12,6 +12,6 @@ export class CategoryCoverPipe implements PipeTransform {
     if (!categoryId) {
       return of('');
     }
-    return from(this.categoryService.getCoverUrl(categoryId));
+    return from('');
   }
 }

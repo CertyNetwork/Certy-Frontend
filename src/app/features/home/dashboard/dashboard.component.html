@@ -6,26 +6,14 @@
       <h1 class="tw-font-bold tw-text-xl tw-mb-5">Overview</h1>
       
       <div class="tw-mt-4" *ngIf="categories$ | async as categories; else loading">
-        <!-- <p-toolbar>
-          <div class="p-toolbar-group-left">
-            <span class="p-input-icon-left">
-              <i class="pi pi-search"></i>
-              <input type="text" pInputText placeholder="Search category"/>
-            </span>
-          </div>
-          <div class="p-toolbar-group-right">
-            <button icon="pi pi-list" [ngClass]="{'p-button-primary': layout ==='list', 'p-button-secondary': layout !=='list'}" class="p-button-rounded p-button-text p-button-sm" pButton (click)="changeViewLayout('list')"></button>
-            <button icon="pi pi-th-large" [ngClass]="{'p-button-primary': layout ==='grid', 'p-button-secondary': layout !=='grid'}" class="p-button-rounded p-button-text p-button-sm" pButton (click)="changeViewLayout('grid')"></button>
-          </div>
-        </p-toolbar> -->
         <p-dataView [value]="categories" [rows]="10" filterBy="name" [layout]="layout">
           <ng-template pTemplate="header">
             <div class="flex flex-column md:flex-row md:justify-content-between">
-              <span class="p-input-icon-left">
+              <div class="p-input-icon-left">
                 <i class="pi pi-search"></i>
-                <input type="text" pInputText placeholder="Search category" [(ngModel)]="filterText" (ngModelChange)="onFilterChange()"/>
-              </span>
-              <div class="ml-auto">
+                <input class="tw-w-full md:tw-w-auto" type="text" pInputText placeholder="Search category" [(ngModel)]="filterText" (ngModelChange)="onFilterChange()"/>
+              </div>
+              <div class="ml-auto tw-mt-3 md:tw-mt-0">
                 <button icon="pi pi-plus" pButton class="mr-3 p-button-rounded p-button-sm" (click)="newCategory()"></button>
                 <button icon="pi pi-list" [ngClass]="{'p-button-primary': layout ==='list', 'p-button-secondary': layout !=='list'}" class="mr-3 p-button-rounded p-button-text p-button-sm" pButton (click)="changeViewLayout('list')"></button>
                 <button icon="pi pi-th-large" [ngClass]="{'p-button-primary': layout ==='grid', 'p-button-secondary': layout !=='grid'}" class="p-button-rounded p-button-text p-button-sm" pButton (click)="changeViewLayout('grid')"></button>
@@ -35,13 +23,13 @@
           <ng-template let-cat pTemplate="listItem">
             <div class="col-12">
               <div class="cert-list-item tw-flex tw-flex-col lg:tw-flex-row tw-items-center">
-                <img src="{{cat.id | categoryCover | async}}" imgFallback class="tw-object-cover tw-rounded tw-h-48" [alt]="cat.title"/>
+                <img src="{{cat.media}}" imgFallback class="tw-object-cover tw-rounded tw-h-48" [alt]="cat.title"/>
                 <div class="product-list-detail tw-ml-6">
                   <div class="product-name tw-font-bold">{{cat.title}}</div>
                   <div class="product-description tw-mt-3">{{cat.description}}</div>
                   <div class="product-description tw-mt-6">
                     <i class="pi pi-clock"></i>
-                    <span class="tw-ml-2 tw-font-light">{{cat.created_at | date:'MMM d, y'}} at {{ cat.created_at | date:'h:mm a'}}</span>
+                    <span class="tw-ml-2 tw-font-light">{{cat.issued_at | date:'MMM d, y'}} at {{ cat.issued_at | date:'h:mm a'}}</span>
                   </div>
                 </div>
                 <div class="product-list-action lg:tw-ml-auto tw-flex tw-flex-row tw-mt-4 lg:tw-mt-0">
@@ -70,14 +58,14 @@
                     </div>
                   </ng-template>
                   <div class="product-grid-item-content">
-                    <img src="{{cat.id | categoryCover | async}}" imgFallback class="tw-object-cover tw-h-48 tw-rounded" [alt]="cat.title"/>
+                    <img src="{{cat.media}}" imgFallback class="tw-object-cover tw-h-48 tw-rounded" [alt]="cat.title"/>
                     <div class="product-name tw-font-medium tw-mt-3">{{cat.title}}</div>
                     <div class="product-description tw-font-normal tw-mt-3">{{cat.description}}</div>
                   </div>
                   <ng-template pTemplate="footer">
                     <div class="product-description">
                       <i class="pi pi-clock"></i>
-                      <span class="tw-ml-2 tw-font-light">{{cat.created_at | date:'MMM d, y'}} at {{ cat.created_at | date:'h:mm a'}}</span>
+                      <span class="tw-ml-2 tw-font-light">{{cat.issued_at | date:'MMM d, y'}} at {{ cat.issued_at | date:'h:mm a'}}</span>
                     </div>
                   </ng-template>
                 </p-card>

@@ -7,7 +7,7 @@
       </div>
       <div class="field">
         <label for="description">Description</label>
-        <input name="description" type="text" pInputText formControlName="description"/>
+        <textarea pInputTextarea [autoResize]="true" name="description" formControlName="description"></textarea>
       </div>
       <div class="field">
         <label for="cover">Cover image</label>

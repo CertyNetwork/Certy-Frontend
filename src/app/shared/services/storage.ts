@@ -3,13 +3,13 @@ import { FirebaseApp, initializeApp, getApp } from 'firebase/app';
 import { FirebaseStorage, ref, uploadBytes, getStorage } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import Arweave from 'arweave';
+import { Web3Storage } from 'web3.storage';
 import { formatResponse, ResponseData } from '../utils/responseBuilder';
 import { retryFetch } from '../utils/retryFetch';
 import arweaveKey from '../../../environments/arware.json';
 import { environment } from 'src/environments/environment';
 
 const CLOUD_URI = '';
-const FIREBASE_MJS_ID = 'FIREBASE_MJS_ID';
 const ARWEAVE_FOLDER = 'arweave';
 const headers = {
   apiKey: 'api-key',
@@ -46,13 +46,14 @@ export class Storage {
     port: 443,
     protocol: 'https'
   });
+  web3Storage = new Web3Storage({ token: environment.WEB3STORAGE_TOKEN });
 
   constructor() {
     let certifyFirebase;
     try {
       certifyFirebase = getApp('certify-web');
     } catch(e) {
-      console.log(e);
+      //
     }
 
     this.firebase = certifyFirebase ?? initializeApp(environment.firebaseConfig, 'certify-web');
@@ -88,7 +89,7 @@ export class Storage {
   }
 
   /**
-   * Upload file to Arweave via a cloud function
+   * Upload file to Arweave
    * @param file the file to upload
    * @returns returns an object containing the arweave content identifier and the content type.
    */
@@ -128,6 +129,20 @@ export class Storage {
       }
     } catch (error: any) {
       return formatResponse({ error: error.message });
+    }
+  }
+
+  /**
+   * Upload file to Web3Storage
+   * @param file the file to upload
+   * @returns returns an object containing the arweave content identifier and the content type.
+   */
+   public async uploadToWeb3Storage(files: File[]): Promise<string> {
+    try {
+      const cid = await this.web3Storage.put(files);
+      return cid;
+    } catch (error: any) {
+      throw new Error('Error while upload media to IPFS.')
     }
   }
 

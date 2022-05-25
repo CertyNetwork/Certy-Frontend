@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Category } from 'src/app/shared/models/category';
 import { CategoryService } from 'src/app/shared/services/category.service';
 
 @Component({
-  selector: 'app-add-category',
-  templateUrl: './add-category.component.html',
-  styleUrls: ['./add-category.component.scss']
+  selector: 'app-new-category',
+  templateUrl: './new-category.component.html',
+  styleUrls: ['./new-category.component.scss']
 })
-export class AddCategoryComponent implements OnInit {
+export class NewCategoryComponent implements OnInit {
+
   step: 'info' | 'field' = 'info';
   categoryForm: FormGroup;
   typeOptions = ['String', 'Number', 'Boolean', 'Media', 'Array'];
@@ -20,7 +20,6 @@ export class AddCategoryComponent implements OnInit {
     private fb: FormBuilder,
     public categoryService: CategoryService,
     private messageService: MessageService,
-    private dialogRef: DynamicDialogRef
   ) {
     this.categoryForm = fb.group({
       info: fb.group({
@@ -99,7 +98,6 @@ export class AddCategoryComponent implements OnInit {
       severity: 'success',
       summary: `New category has been added: ${categoryId}`,
     });
-    this.dialogRef.close();
   }
 
   dragStart(event: any, startIndex: any) {
@@ -121,4 +119,5 @@ export class AddCategoryComponent implements OnInit {
       this.draggedIndex = null;
     }
   }
+
 }

@@ -1,0 +1,11 @@
+:host {
+  .ngx-dropzone {
+    background-color: var(--input-background);
+  }
+}
+
+:host ::ng-deep {
+  ngx-dropzone-label {
+    z-index: inherit !important;
+  }
+}

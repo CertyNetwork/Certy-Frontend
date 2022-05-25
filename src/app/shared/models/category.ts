@@ -3,8 +3,9 @@ export interface Category {
   title: string;
   description: string;
   raw_image?: File,
-  cover_image?: string;
-  created_at: number;
+  media?: string;
+  media_hash?: string;
+  issued_at: number;
   last_updated_at?: boolean;
   fields?: Array<{
     name: string;

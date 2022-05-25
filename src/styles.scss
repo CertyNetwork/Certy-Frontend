@@ -41,7 +41,7 @@
   --btn-background: rgb(38 54 67);
   --background-color: rgb(6, 13, 19);
   --panel-color:#071426;
-  --input-background: rgb(38, 53, 67);
+  --input-background: #040d19;
   --panel-overlay-color: rgba(122, 115, 115, 0.5);
   --backdrop-color: rgb(6, 13, 19, 0.6);
   --text-color-tertiary: #f8f8f8;
@@ -88,5 +88,19 @@ body {
         border-radius: 4px;
       }
     }
+  }
+}
+
+.p-inputtext {
+  background-color: var(--input-background);
+  &:focus-within {
+    background-color: transparent;
+  }
+}
+
+ngx-dropzone {
+  background-color: var(--input-background);
+  &:focus-within {
+    background-color: transparent;
   }
 }

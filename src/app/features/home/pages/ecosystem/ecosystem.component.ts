@@ -33,9 +33,7 @@ export class EcosystemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.contractSvc.getAllCerts().then((result) => {
-      console.log(result);
-    }).catch(e => console.log(e))
+    //
   }
 
   async connectAccount() {
@@ -43,42 +41,34 @@ export class EcosystemComponent implements OnInit {
   }
 
   async onSubmit () {
-    if (this.certForm.invalid) {
-      return;
-    }
+    // if (this.certForm.invalid) {
+    //   return;
+    // }
 
-    if (!this.files.length) {
-      return;
-    }
+    // if (!this.files.length) {
+    //   return;
+    // }
 
-    const coverImage = this.files[0];
-    const { data: fileUploadResult, error: fileError } = await this.contractSvc.upload(coverImage);
+    // const coverImage = this.files[0];
+    // const { data: fileUploadResult, error: fileError } = await this.contractSvc.upload(coverImage);
 
-    if (fileError) {
-      console.error(fileError);
-      return;
-    }
+    // if (fileError) {
+    //   console.error(fileError);
+    //   return;
+    // }
 
 
-    // setIsMinting(false);
-    const { uri, hash } = fileUploadResult;
-    const { basicInfo, additionalInfo } = this.certForm.value;
-    this.contractSvc.mintCertificate({
-      title: basicInfo.title,
-      media: uri,
-      description: basicInfo.description,
-      issued_at: Date.now(),
-      transferred: false,
-      properties: {
-        certification_authority_name: additionalInfo?.certification_authority_name,
-        major: additionalInfo?.major,
-        degree_title: additionalInfo?.degree_title,
-        degree_classification: additionalInfo?.degree_classification,
-        hash: hash,
-      }
-    }).then((result) => {
-      console.log(result);
-    }).catch(e => console.log(e));
+    // // setIsMinting(false);
+    // const { uri, hash } = fileUploadResult;
+    // const { basicInfo, additionalInfo } = this.certForm.value;
+    // this.contractSvc.mintCertificate({
+    //   title: basicInfo.title,
+    //   media: uri,
+    //   description: basicInfo.description,
+    //   issued_at: Date.now(),
+    // }).then((result) => {
+    //   console.log(result);
+    // }).catch(e => console.log(e));
   }
 
   onSelect(event: any) {

@@ -130,14 +130,7 @@ export class BulkMintComponent implements OnInit {
         media: 'uri',
         description: data.description,
         issued_at: Date.now(),
-        transferred: false,
-        properties: {
-          certification_authority_name: data.certification_authority_name,
-          major: data.major,
-          degree_title: data.degree_title,
-          degree_classification: data.degree_classification,
-          hash: data,
-        }
+        reference: '',
       }));
     });
 

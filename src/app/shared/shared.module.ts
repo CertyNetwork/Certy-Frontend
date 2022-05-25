@@ -16,6 +16,7 @@ import { ChipModule } from 'primeng/chip';
 import { MenuModule } from 'primeng/menu';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -38,13 +39,15 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChipsModule } from 'primeng/chips';
 import { DragDropModule } from 'primeng/dragdrop';
 import { SkeletonModule } from 'primeng/skeleton';
+import { SidebarModule } from 'primeng/sidebar';
+import { ListboxModule } from 'primeng/listbox';
 import { NearLoginComponent } from './components/near-login/near-login.component';
 import { CategoryCoverPipe } from './pipes/category-cover.pipe';
 import { ImageFallbackDirective } from './directives/image-fallback';
 import { CategoryResolver } from './resolvers/category.resolver';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ProfileCoverPipe } from './pipes/profile-image.pipe';
-
+import { CategorySelectorComponent } from './components/category-selector/category-selector.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +66,7 @@ import { ProfileCoverPipe } from './pipes/profile-image.pipe';
 
     //
     ImageFallbackDirective,
+     CategorySelectorComponent,
   ],
   imports: [
     CommonModule,
@@ -77,6 +81,7 @@ import { ProfileCoverPipe } from './pipes/profile-image.pipe';
     MenuModule,
     PanelModule,
     InputTextModule,
+    InputTextareaModule,
     InputNumberModule,
     FileUploadModule,
     ToolbarModule,
@@ -98,6 +103,8 @@ import { ProfileCoverPipe } from './pipes/profile-image.pipe';
     ChipsModule,
     DragDropModule,
     SkeletonModule,
+    SidebarModule,
+    ListboxModule,
   ],
   exports: [
     CommonModule,
@@ -111,6 +118,7 @@ import { ProfileCoverPipe } from './pipes/profile-image.pipe';
     MenuModule,
     PanelModule,
     InputTextModule,
+    InputTextareaModule,
     InputNumberModule,
     FileUploadModule,
     ToolbarModule,
@@ -133,6 +141,8 @@ import { ProfileCoverPipe } from './pipes/profile-image.pipe';
     ChipsModule,
     DragDropModule,
     SkeletonModule,
+    SidebarModule,
+    ListboxModule,
 
     // Pipes
     CategoryCoverPipe,

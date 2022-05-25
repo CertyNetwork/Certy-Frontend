@@ -12,6 +12,7 @@ import { BulkMintComponent } from './pages/bulk-mint/bulk-mint.component';
 import { AddCategoryComponent } from './components/add-category/add-category.component';
 import { MintNftComponent } from './pages/mint-nft/mint-nft.component';
 import { BulkCreateComponent } from './pages/bulk-create/bulk-create.component';
+import { NewCategoryComponent } from './pages/new-category/new-category.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { BulkCreateComponent } from './pages/bulk-create/bulk-create.component';
     AddCategoryComponent,
     MintNftComponent,
     BulkCreateComponent,
+    NewCategoryComponent,
   ],
   imports: [
     CommonModule,

@@ -1,54 +1,84 @@
 <div class="tw-container" *ngIf="category$ | async as category">
   <h1 class="tw-font-bold tw-text-xl tw-my-10">Create Certificate: <span [ngStyle]="{color:'var(--primary-color)'}">{{category.title}}</span></h1>
   <form [formGroup]="certForm" (ngSubmit)="onSubmit()" class="p-fluid">
-    <ng-container *ngFor="let field of category.fields">
-      <ng-container [ngSwitch]="field.data_type">
-        <ng-template [ngSwitchCase]="'string'">
+    <p-panel header="Certificate Info">
+      <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 md:tw-gap-10">
+        <div class="tw-w-full">
+          <div class="p-fluid">
+            <div class="field">
+              <label class="" for="media">Media</label>
+              <app-file-upload formControlName="media"></app-file-upload>
+            </div>
+          </div>
+        </div>
+        <div class="tw-w-full">
           <div class="field">
-            <label class="" for="{{field.name}}">{{field.label}}</label>
-            <input type="text" id="{{field.name}}" formControlName="{{field.name}}" pInputText>
+            <label class="" for="title">Title</label>
+            <input type="text" id="title" formControlName="title" pInputText>
           </div>
-        </ng-template>
-        <ng-template [ngSwitchCase]="'number'">
           <div class="field">
-            <label class="" for="{{field.name}}">{{field.label}}</label>
-            <p-inputNumber inputId="{{field.name}}" formControlName="{{field.name}}"></p-inputNumber>
+            <label class="" for="description">Description</label>
+            <input type="text" id="description" formControlName="description" pInputText>
           </div>
-        </ng-template>
-        <ng-template [ngSwitchCase]="'boolean'">
-          <div class="field-checkbox">
-            <p-checkbox formControlName="{{field.name}}" [binary]="true" inputId="{{field.name}}"></p-checkbox>
-            <label for="{{field.name}}">{{field.label}}</label>
-          </div>
-        </ng-template>
-        <ng-template [ngSwitchCase]="'array'">
-          <div class="field">
-            <label class="" for="{{field.name}}">{{field.label}}</label>
-            <p-dropdown [options]="field.options || []"
-                formControlName="{{field.name}}">
-            </p-dropdown>
-          </div>
-        </ng-template>
-        <ng-template [ngSwitchCase]="'html'">
-          <div class="field">
-            <label class="" for="{{field.name}}">{{field.label}}</label>
-            <p-editor [id]="field.name" formControlName="{{field.name}}" [style]="{'height':'220px'}"></p-editor>
-          </div>
-        </ng-template>
-        <ng-template [ngSwitchCase]="'media'">
-          <div class="field">
-            <label class="" for="{{field.name}}">{{field.label}}</label>
-            <app-file-upload formControlName="{{field.name}}"></app-file-upload>
-          </div>
-        </ng-template>
-      </ng-container>
-    </ng-container>
+        </div>
+      </div>
+    </p-panel>
+    <p-panel header="Additional Information" styleClass="tw-mt-10" *ngIf="category.fields && category.fields.length">
+      <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 md:tw-gap-4">
+        <div class="tw-w-full">
+          <ng-container *ngFor="let field of category.fields">
+            <ng-container [ngSwitch]="field.data_type">
+              <ng-template [ngSwitchCase]="'string'">
+                <div class="field">
+                  <label class="" for="{{field.name}}">{{field.label}}</label>
+                  <input type="text" id="{{field.name}}" formControlName="{{field.name}}" pInputText>
+                </div>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'number'">
+                <div class="field">
+                  <label class="" for="{{field.name}}">{{field.label}}</label>
+                  <p-inputNumber inputId="{{field.name}}" formControlName="{{field.name}}"></p-inputNumber>
+                </div>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'boolean'">
+                <div class="field-checkbox">
+                  <p-checkbox formControlName="{{field.name}}" [binary]="true" inputId="{{field.name}}"></p-checkbox>
+                  <label for="{{field.name}}">{{field.label}}</label>
+                </div>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'array'">
+                <div class="field">
+                  <label class="" for="{{field.name}}">{{field.label}}</label>
+                  <p-dropdown [options]="field.options || []"
+                      formControlName="{{field.name}}">
+                  </p-dropdown>
+                </div>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'html'">
+                <div class="field">
+                  <label class="" for="{{field.name}}">{{field.label}}</label>
+                  <p-editor [id]="field.name" formControlName="{{field.name}}" [style]="{'height':'220px'}"></p-editor>
+                </div>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'media'">
+                <div class="field">
+                  <label class="" for="{{field.name}}">{{field.label}}</label>
+                  <app-file-upload formControlName="{{field.name}}"></app-file-upload>
+                </div>
+              </ng-template>
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="tw-w-full"></div>
+      </div>
+    </p-panel>
+    
     <p-toolbar styleClass="tw-sticky tw-bottom-0 tw-mt-10 tw-w-auto">
       <div class="p-toolbar-group-left">
         <button icon="pi pi-cancel" class="p-button-danger" pButton label="Cancel"></button>
       </div>
       <div class="p-toolbar-group-right">
-        <button icon="pi pi-plus" pButton label="Create and Mint" [disabled]="certForm.invalid"></button>
+        <button icon="pi pi-plus" pButton label="Create and Mint" [loading]="isMinting" [disabled]="certForm.invalid" ></button>
       </div>
     </p-toolbar>
   </form>    
