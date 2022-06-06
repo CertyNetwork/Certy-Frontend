@@ -10,6 +10,7 @@ export const environment = {
   nodeUrl: 'https://rpc.testnet.near.org',
   walletUrl: 'https://wallet.testnet.near.org',
   helperUrl: 'https://helper.testnet.near.org',
+  explorerUrl: 'https://explorer.testnet.near.org',
   BASE_ARWEAVE_URI: 'https://arweave.net',
   firebaseConfig: {
     apiKey: "AIzaSyAH6-KUWqDuPfIFXz5tm8J-MoTpvSdjUtw",
@@ -20,6 +21,7 @@ export const environment = {
     appId: "1:608105229371:web:63c2a5e5fce5d17e24401e",
     measurementId: "G-J5F3LH4E3G"
   },
+  VOUCHED_PUBLIC_KEY: '5KsJQNwG#@Tkdmy7O!*KWcCGvl3_Ty',
   WEB3STORAGE_TOKEN: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhjQzNiMTgxMDY2ZTZDOUZEYTY4NjBFZTA2Q0E1QTVBQjM5YjY3YTMiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NTI5MzE2MTU4MzYsIm5hbWUiOiJjZXJ0aWZ5In0.ddHB_eKmq2Ehk5izSfmUFVr-Gp_vYlCa7JQI7ofY6Ls',
 };
 

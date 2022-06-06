@@ -1,0 +1,29 @@
+<div class="p-fluid tw-mt-5 tw-pr-0 lg-tw-pr-5" [formGroup]="infoForm">
+  <ng-container [ngSwitch]="step">
+    <ng-template [ngSwitchCase]="'info'">
+      <div class="field">
+        <label for="email">Email</label>
+        <input name="email" type="text" pInputText formControlName="email"/>
+      </div>
+      <div class="field">
+        <label for="contactName">Contact Name</label>
+        <input pInputText name="contactName" formControlName="contactName" />
+      </div>
+      <div class="field">
+        <label for="organizationName">Organization Name</label>
+        <input name="organizationName" type="text" pInputText formControlName="organizationName"/>
+      </div>
+      <div class="field">
+        <label for="address">Address</label>
+        <input name="address" type="text" pInputText formControlName="address"/>
+      </div>
+      <div class="field">
+        <label for="phoneNumber">Phone Number</label>
+        <input name="phoneNumber" type="text" pInputText formControlName="phoneNumber"/>
+      </div>
+      <div class="tw-mt-5 tw-flex tw-justify-end">
+        <button pButton [disabled]="infoForm.invalid" icon="pi pi-arrow-right" iconPos="right" class="p-button-info tw-mt-4" style="width: auto" label="Submit" (click)="submitInfo()"></button>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

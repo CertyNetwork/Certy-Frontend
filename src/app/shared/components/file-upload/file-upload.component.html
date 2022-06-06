@@ -1,8 +1,11 @@
-<div class="ngx-dropzone" ngx-dropzone (change)="onSelect($event)" [multiple]="false" [disableClick]="files.length > 0">
+<div class="ngx-dropzone" ngx-dropzone (change)="onSelect($event)" [accept]="accept" [multiple]="false" [disableClick]="files.length > 0">
   <ngx-dropzone-label>
-    <span class="tw-block mb-3">Drop files or <span class="tw-text-lime-500">browse your device</span></span>
+    <span class="tw-block mb-3">
+      <span class="pi pi-upload tw-mr-2"></span>
+      {{label}}
+    </span>
   </ngx-dropzone-label>
-  <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove($event)">
-    <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-  </ngx-dropzone-preview>
+  <ngx-dropzone-image-preview gProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove($event)">
+    <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
+  </ngx-dropzone-image-preview>
 </div>

@@ -1,0 +1,13 @@
+:host ::ng-deep {
+  height: 100%;
+  display: block;
+
+  .cert-list-item, .product-grid-item {
+    padding: 2rem;
+  }
+
+  .p-dataview-content {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+}

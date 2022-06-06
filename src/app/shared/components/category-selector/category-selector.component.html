@@ -1,18 +1,18 @@
 <div *ngIf="categories$ | async as categories; else loading">
   <div class="grid">
     <div class="col-6 tw-cursor-pointer tw-p-3">
-      <div class="tw-rounded-lg shadow-2 tw-p-3 tw-h-full tw-flex tw-items-center tw-justify-center" (click)="newCategory()">
+      <div class="category-item tw-rounded-lg shadow-0 border-1 tw-p-3 tw-h-full tw-flex tw-items-center tw-justify-center" (click)="newCategory()">
         <i class="pi pi-plus tw-mr-3"></i>
         <p>New Category</p>
       </div>
       
     </div>
     <div class="col-6 tw-cursor-pointer tw-p-3" *ngFor="let cat of categories">
-      <div class="shadow-2 tw-h-full tw-flex tw-flex-col tw-border-2 tw-rounded-lg hover:tw-bg-gray-300" (click)="onSelect(cat.id)">
-        <img class="tw-h-auto tw-w-full tw-rounded-t-lg" alt="{{cat.title}}" src="{{cat.media}}">
+      <div class="category-item shadow-0 tw-h-full tw-flex tw-flex-col border-1 tw-rounded-lg" (click)="onSelect(cat.id)">
+        <img class="tw-h-auto tw-object-cover tw-max-h-48 tw-w-full tw-rounded-t-lg" alt="{{cat.title}}" src="{{cat.media}}" imgFallback>
         <div class="w-w-full tw-my-4 tw-px-4">
           <p class="tw-font-bold">{{cat.title}}</p>
-          <p>{{cat.description}}</p>
+          <p class="tw-line-clamp-2 p-text-secondary tw-mt-3">{{cat.description}}</p>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -16,6 +16,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class FileUploadComponent implements ControlValueAccessor {
   onChange!: Function;
   files: File[] = [];
+  @Input() label: string = 'Click or drop images';
+  @Input() accept: string = '*';
 
   onSelect(event: any) {
     this.files.push(...event.addedFiles);
@@ -29,10 +31,12 @@ export class FileUploadComponent implements ControlValueAccessor {
   constructor( private host: ElementRef<HTMLInputElement> ) {
   }
 
-  writeValue( value: null ) {
-    // clear file input
-    this.host.nativeElement.value = '';
-    this.files = [];
+  writeValue(value: File[]) {
+    if (value && value.length) {
+      this.files = value;
+    } else {
+      this.files = [];
+    }
   }
 
   registerOnChange( fn: Function ) {

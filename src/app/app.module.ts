@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
 import { RecipeItemComponent } from './components/recipe-item/recipe-item.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { DataService } from './services/DataService';
 import { SharedModule } from './shared/shared.module';
@@ -21,6 +22,7 @@ import { THEMES } from './constants/theme';
     AppComponent,
     RecipeListComponent,
     RecipeItemComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,

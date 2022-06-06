@@ -1,11 +1,34 @@
 :host {
   .ngx-dropzone {
     background-color: var(--input-background);
+    border: none;
+    min-height: 140px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ngx-dropzone-image-preview {
+      margin: 0 !important;
+
+      ngx-dropzone-label {
+        opacity: 0.8;
+      }
+    }
   }
 }
 
 :host ::ng-deep {
   ngx-dropzone-label {
     z-index: inherit !important;
+    color: var(--text-color);
+  }
+
+  .tw-block {
+    background-color: var(--surface-card);
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
   }
 }

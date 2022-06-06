@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -12,9 +13,19 @@ export class SideBarComponent implements OnInit {
   }
   isSearch: boolean = false;
   
-  constructor() { }
+  theme$ = this.themeService.theme$;
+
+  constructor(
+    private themeService: ThemeService
+  ) {
+    //
+  }
 
   ngOnInit(): void {
+  }
+
+  switchMode(theme: string) {
+    this.themeService.changeTheme(theme);
   }
 
 }

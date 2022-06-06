@@ -1,0 +1,16 @@
+:host ::ng-deep {
+  .p-panel-content {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding-top: 24px;
+  }
+
+  .active-link {
+    background-color: var(--surface-200);
+    color: var(--text-color) !important;
+  }
+
+  .sub-link {
+    color: var(--text-color-tertiary);
+  }
+}

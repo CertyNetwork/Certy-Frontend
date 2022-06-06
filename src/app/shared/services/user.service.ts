@@ -53,6 +53,16 @@ export class UserService {
       if (docSnap.exists()) {
         const data = docSnap.data();
         this.profile.next(data as Profile);
+      } else {
+        this.profile.next({
+          user_type: 'individual',
+          display_name: '',
+          email: '',
+          location: '',
+          bio: '',
+          kyc_status: 'unverified',
+          created_at: 0
+        });
       }
     } catch(e) {
       console.log(e);

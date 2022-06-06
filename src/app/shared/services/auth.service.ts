@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, mergeMap } from 'rxjs';
-import { connect, keyStores, WalletConnection, ConnectConfig, utils } from "near-api-js";
+import { BehaviorSubject, from, mergeMap, Observable } from 'rxjs';
+import { connect, keyStores, WalletConnection, ConnectConfig, utils, providers } from "near-api-js";
 import { environment } from 'src/environments/environment';
+import { AccountView } from 'near-api-js/lib/providers/provider';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,7 @@ export class AuthService {
     })
   );
   wallet: WalletConnection | null = null;
+  provider = new providers.JsonRpcProvider(environment.nodeUrl);
 
   constructor() {
     const config: ConnectConfig = {
@@ -54,6 +56,8 @@ export class AuthService {
     if (this.wallet.isSignedIn()) {
       this.authenticateSubject.next(true);
     }
+
+    // http://localhost:4200/?account_id=gile.testnet&public_key=ed25519%3A9i3NZzFLFEL1x6mwBuyacVrzZFye9CCcqEJsRfvUgrJD&all_keys=ed25519%3AA4PUo9YcaojcNPeQRAn3CYeoqvWmAtgS6A3tCcC9BpP5
   }
 
   signOut() {
@@ -68,5 +72,20 @@ export class AuthService {
       return false;
     }
     return this.wallet.isSignedIn();
+  }
+
+  public checkIfWalletIdNotExists(walletId: string): Observable<boolean> {
+    return from((async () => {
+      try {
+        const accountInfo = await this.provider.query<AccountView>({
+          request_type: "view_account",
+          account_id: walletId,
+          finality: "final",
+        });
+        return !accountInfo;
+      } catch (e) {
+        return true;
+      }
+    })());
   }
 }

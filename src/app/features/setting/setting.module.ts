@@ -5,6 +5,7 @@ import { KycComponent } from './components/kyc/kyc.component';
 import { IndexComponent } from './pages/index/index.component';
 import { SettingRoutingModule } from './setting-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CorporateVerificationComponent } from './components/corporate-verification/corporate-verification.component';
 
 
 
@@ -12,7 +13,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
   declarations: [
     BasicInfoComponent,
     KycComponent,
-    IndexComponent
+    IndexComponent,
+    CorporateVerificationComponent
   ],
   imports: [
     CommonModule,

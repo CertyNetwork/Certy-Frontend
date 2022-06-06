@@ -42,12 +42,12 @@
               "node_modules/quill/dist/quill.core.css",
               "node_modules/quill/dist/quill.snow.css",
               {
-                "input": "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+                "input": "src/assets/themes/light.css",
                 "bundleName": "lara-light",
                 "inject": false
               },
               {
-                "input": "node_modules/primeng/resources/themes/lara-dark-blue/theme.css",
+                "input": "src/assets/themes/dark.css",
                 "bundleName": "lara-dark",
                 "inject": false
               },

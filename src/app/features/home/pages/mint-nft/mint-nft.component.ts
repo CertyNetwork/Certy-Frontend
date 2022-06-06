@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { ConfirmationService } from 'primeng/api';
+import { from, map, Observable, Subject, takeUntil } from 'rxjs';
+import { WalletIdValidator } from 'src/app/shared/directives/wallet_id.validator';
 import { Category } from 'src/app/shared/models/category';
 import { CertificateData } from 'src/app/shared/models/certificate-data';
 import { ContractService } from 'src/app/shared/services/certify.contract.service';
@@ -12,31 +14,44 @@ import { Storage } from 'src/app/shared/services/storage';
   templateUrl: './mint-nft.component.html',
   styleUrls: ['./mint-nft.component.scss']
 })
-export class MintNftComponent implements OnInit {
+export class MintNftComponent implements OnInit, OnDestroy {
   category$: Observable<Category>;
   categoryId: any;
   certForm: FormGroup;
   additionalFields: any[] = [];
   isMinting = false;
+  destroy$ = new Subject<void>();
 
   constructor(
     private activeRoute: ActivatedRoute,
     private fb: FormBuilder,
     private contractSvc: ContractService,
-    private storage: Storage
+    private walletIdValidator: WalletIdValidator,
+    private storage: Storage,
+    private confirmationService: ConfirmationService
   ) {
     this.category$ = this.activeRoute.data.pipe(
       map(data => data['category'] as Category)
     );
     this.certForm = fb.group({
+      walletId: fb.control(null, {
+        validators: [Validators.required],
+        asyncValidators: [this.walletIdValidator.validate.bind(this.walletIdValidator)],
+        updateOn: 'blur',
+      }),
       media: [null, [Validators.required]],
       title: [null, [Validators.required]],
       description: [null, [Validators.required]]
     });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   ngOnInit(): void {
-    this.category$.subscribe((category: Category) => {
+    this.category$.pipe(takeUntil(this.destroy$)).subscribe((category: Category) => {
       this.categoryId = category.id;
       category.fields?.forEach(fd => {
         this.certForm.addControl(fd.name, this.fb.control(null, fd.mandatory ? [Validators.required] : []));
@@ -65,7 +80,7 @@ export class MintNftComponent implements OnInit {
         mediaFiles.push(...files);
       }
     }
-    
+
     this.isMinting = true;
 
     try {
@@ -74,7 +89,7 @@ export class MintNftComponent implements OnInit {
         title: data['title'],
         description: data['description'],
         media: `https://${cid}.ipfs.dweb.link/${data['media'][0].name}`,
-        issued_at: Date.now()
+        issued_at: Date.now(),
       };
       
       if (this.additionalFields.length) {
@@ -92,7 +107,7 @@ export class MintNftComponent implements OnInit {
         certData.reference = `https://${refCid}.ipfs.dweb.link/reference.json`;
       }
   
-      await this.contractSvc.mintCertificate(certData, this.categoryId);
+      await this.contractSvc.mintCertificate(certData, this.categoryId, data['walletId']);
     } catch (e) {
       console.log(e);
     } finally {
@@ -111,5 +126,26 @@ export class MintNftComponent implements OnInit {
       new File([blob], 'reference.json')
     ];
     return files;
+  }
+
+  get walletId() { return this.certForm.get('walletId'); }
+
+  canDeactivate(): Observable<boolean> | boolean {
+    if (this.certForm.dirty) {
+      return from(new Promise<boolean>((rs, rj) => {
+        this.confirmationService.confirm({
+          message: 'You have a pending work. Are you sure you want to leave this page?',
+          accept: () => {
+            return rs(true);
+          },
+          reject: () => {
+            return rs(false);
+          },
+          acceptButtonStyleClass: 'p-button-info',
+          rejectButtonStyleClass: 'p-button-secondary mr-5'
+        });
+      }));
+    }
+    return true;
   }
 }

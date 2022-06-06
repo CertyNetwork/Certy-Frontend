@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { Contract, utils } from "near-api-js";
-import * as uuid from 'uuid';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { CertificateData } from '../models/certificate-data';
@@ -22,6 +22,7 @@ export class ContractService {
   constructor(
     private authService: AuthService,
     private storage: Storage,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.loadContract();
   }
@@ -49,12 +50,10 @@ export class ContractService {
         ], // view methods
         changeMethods: [
           "nft_mint",
+          'nft_bulk_mint',
           "nft_transfer",
           'category_create',
           'category_update',
-
-          'cert_mint',
-          'cert_bulk_mint',
           'cert_update'
         ], // change methods
       }
@@ -88,11 +87,18 @@ export class ContractService {
       fields: JSON.stringify(category.fields),
       issued_at: Date.now(),
     };
+    const callbackUrl = this.document.location.protocol + '//' + document.location.host + '/categories';
     try {
       // @ts-ignore: method does not exist on Contract type
       let addedCategory = await this.contract.category_create({
-        metadata: metadata,
-      }, '300000000000000', utils.format.parseNearAmount("1"));
+        callbackUrl,
+        meta: '',
+        args: {
+          metadata: metadata,
+        },
+        gas: '300000000000000',
+        amount: utils.format.parseNearAmount("1")
+      });
       return addedCategory;
     } catch (e) {
       console.log(e);
@@ -134,32 +140,43 @@ export class ContractService {
   };
  }
   
-  async mintCertificate(data: CertificateData, categoryId?: string) {
+  async mintCertificate(data: CertificateData, categoryId: string, receiverId: string) {
     if (!this.contract) {
       return false;
     }
-    const accountId = this.authService.wallet?.getAccountId();
+    const callbackUrl = this.document.location.protocol + '//' + document.location.host + '/dashboard';
     // @ts-ignore: method does not exist on Contract type
-    await this.contract.cert_mint({
-      receiver_id: accountId,
-      category_id: categoryId,
-      metadata: data
-    }, '300000000000000', utils.format.parseNearAmount("1"));
+    await this.contract.nft_mint({
+      callbackUrl,
+      meta: '',
+      args: {
+        receiver_id: receiverId,
+        category_id: categoryId,
+        metadata: data
+      },
+      gas: '300000000000000',
+      amount: utils.format.parseNearAmount("1")
+    });
     return true;
   }
 
-  async bulkMintCertificate(data: CertificateData, categoryId?: string) {
+  async bulkMintCertificate(receiverIds: string[], metadatas: CertificateData[], categoryId?: string) {
     if (!this.contract) {
       return false;
     }
-    const tokenId = uuid.v4();
-    const accountId = this.authService.wallet?.getAccountId();
+    const callbackUrl = this.document.location.protocol + '//' + document.location.host + '/dashboard';
     // @ts-ignore: method does not exist on Contract type
-    await this.contract.nft_mint({
-      receiver_ids: accountId,
-      category_id: categoryId,
-      metadatas: data
-    }, '300000000000000', utils.format.parseNearAmount("1"));
+    await this.contract.nft_bulk_mint({
+      callbackUrl,
+      meta: '',
+      args: {
+        receiver_ids: receiverIds,
+        category_id: categoryId,
+        metadatas: metadatas
+      },
+      gas: '300000000000000',
+      amount: utils.format.parseNearAmount("1")
+    });
     return true;
   }
 

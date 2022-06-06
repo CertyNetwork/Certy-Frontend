@@ -1,85 +1,90 @@
-<div class="tw-container" *ngIf="category$ | async as category">
-  <h1 class="tw-font-bold tw-text-xl tw-my-10">Create Certificate: <span [ngStyle]="{color:'var(--primary-color)'}">{{category.title}}</span></h1>
-  <form [formGroup]="certForm" (ngSubmit)="onSubmit()" class="p-fluid">
-    <p-panel header="Certificate Info">
-      <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 md:tw-gap-10">
-        <div class="tw-w-full">
-          <div class="p-fluid">
+<div class="tw-flex tw-h-full tw-flex-no-wrap tw-overflow-hidden">
+  <app-side-bar></app-side-bar>
+  <div class="tw-w-full tw-flex tw-flex-col tw-mx-auto tw-h-full tw-overflow-y-auto" *ngIf="category$ | async as category">
+    <h1 class="tw-font-bold tw-text-3xl tw-mt-10 tw-mx-10 tw-mb-5">Create Certificate: <span [ngStyle]="{color:'var(--primary-color)'}">{{category.title}}</span></h1>
+    <form [formGroup]="certForm" class="p-fluid">
+      <div class="tw-rounded-md tw-mx-10 tw-p-5 tw-mb-10 shadow-5" style="background-color: var(--surface-card);">
+        <h3 class="tw-text-lg tw-mb-6 tw-pl-2 tw-border-l-8 tw-border-sky-500">Certificate Info</h3>
+        <div class="grid">
+          <div class="col-12 lg:col-6">
             <div class="field">
-              <label class="" for="media">Media</label>
-              <app-file-upload formControlName="media"></app-file-upload>
+              <label class="" for="walletId">Wallet ID</label>
+              <span class="p-input-icon-right">
+                <i class="pi pi-spin pi-spinner" *ngIf="walletId?.status === 'PENDING'"></i>
+                <i class="pi pi-check p-text-success" *ngIf="walletId?.status === 'VALID'"></i>
+                <input type="text" id="walletId" formControlName="walletId" pInputText appWalletId>
+              </span>
+              <small id="username2-help" class="p-error block" *ngIf="walletId?.hasError('invalidWalletId')"> Wallet Id is invalid</small>
+            </div>
+            <div class="field">
+              <label class="" for="title">Title</label>
+              <input type="text" id="title" formControlName="title" pInputText [maxlength]="256">
+            </div>
+            <div class="field">
+              <label class="" for="description">Description</label>
+              <textarea pInputTextarea [autoResize]="true" name="description" [maxlength]="256" formControlName="description"></textarea>
+            </div>
+          </div>
+          <div class="col-12 lg:col-6">
+            <div class="field tw-flex tw-flex-col tw-h-full">
+              <label class="" for="media">Upload Media</label>
+              <app-file-upload style="height: 100%; padding-bottom: 1.4rem;" accept="image/*,video/*" formControlName="media"></app-file-upload>
             </div>
           </div>
         </div>
-        <div class="tw-w-full">
-          <div class="field">
-            <label class="" for="title">Title</label>
-            <input type="text" id="title" formControlName="title" pInputText>
-          </div>
-          <div class="field">
-            <label class="" for="description">Description</label>
-            <input type="text" id="description" formControlName="description" pInputText>
-          </div>
-        </div>
       </div>
-    </p-panel>
-    <p-panel header="Additional Information" styleClass="tw-mt-10" *ngIf="category.fields && category.fields.length">
-      <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 md:tw-gap-4">
-        <div class="tw-w-full">
-          <ng-container *ngFor="let field of category.fields">
-            <ng-container [ngSwitch]="field.data_type">
-              <ng-template [ngSwitchCase]="'string'">
-                <div class="field">
-                  <label class="" for="{{field.name}}">{{field.label}}</label>
-                  <input type="text" id="{{field.name}}" formControlName="{{field.name}}" pInputText>
-                </div>
-              </ng-template>
-              <ng-template [ngSwitchCase]="'number'">
-                <div class="field">
-                  <label class="" for="{{field.name}}">{{field.label}}</label>
-                  <p-inputNumber inputId="{{field.name}}" formControlName="{{field.name}}"></p-inputNumber>
-                </div>
-              </ng-template>
-              <ng-template [ngSwitchCase]="'boolean'">
-                <div class="field-checkbox">
-                  <p-checkbox formControlName="{{field.name}}" [binary]="true" inputId="{{field.name}}"></p-checkbox>
-                  <label for="{{field.name}}">{{field.label}}</label>
-                </div>
-              </ng-template>
-              <ng-template [ngSwitchCase]="'array'">
-                <div class="field">
-                  <label class="" for="{{field.name}}">{{field.label}}</label>
-                  <p-dropdown [options]="field.options || []"
-                      formControlName="{{field.name}}">
-                  </p-dropdown>
-                </div>
-              </ng-template>
-              <ng-template [ngSwitchCase]="'html'">
-                <div class="field">
-                  <label class="" for="{{field.name}}">{{field.label}}</label>
-                  <p-editor [id]="field.name" formControlName="{{field.name}}" [style]="{'height':'220px'}"></p-editor>
-                </div>
-              </ng-template>
-              <ng-template [ngSwitchCase]="'media'">
-                <div class="field">
-                  <label class="" for="{{field.name}}">{{field.label}}</label>
-                  <app-file-upload formControlName="{{field.name}}"></app-file-upload>
-                </div>
-              </ng-template>
+      <div class="tw-rounded-md tw-mx-10 tw-p-5 tw-mb-10 shadow-5" style="background-color: var(--surface-card);" *ngIf="category.fields && category.fields.length">
+        <h3 class="tw-text-lg tw-mb-6 tw-pl-2 tw-border-l-8 tw-border-sky-500">Additional Info</h3>
+        <div class="grid">
+          <div class="col-12 lg:col-6">
+            <ng-container *ngFor="let field of category.fields">
+              <ng-container [ngSwitch]="field.data_type">
+                <ng-template [ngSwitchCase]="'string'">
+                  <div class="field">
+                    <label class="" for="{{field.name}}">{{field.label | titlecase}}</label>
+                    <input type="text" id="{{field.name}}" formControlName="{{field.name}}" pInputText [maxlength]="256">
+                  </div>
+                </ng-template>
+                <ng-template [ngSwitchCase]="'number'">
+                  <div class="field">
+                    <label class="" for="{{field.name}}">{{field.label}}</label>
+                    <p-inputNumber inputId="{{field.name}}" formControlName="{{field.name}}"></p-inputNumber>
+                  </div>
+                </ng-template>
+                <ng-template [ngSwitchCase]="'boolean'">
+                  <div class="field-checkbox">
+                    <p-checkbox formControlName="{{field.name}}" [binary]="true" inputId="{{field.name}}"></p-checkbox>
+                    <label for="{{field.name}}">{{field.label}}</label>
+                  </div>
+                </ng-template>
+                <ng-template [ngSwitchCase]="'array'">
+                  <div class="field">
+                    <label class="" for="{{field.name}}">{{field.label}}</label>
+                    <p-dropdown [options]="field.options || []"
+                        formControlName="{{field.name}}">
+                    </p-dropdown>
+                  </div>
+                </ng-template>
+                <ng-template [ngSwitchCase]="'html'">
+                  <div class="field">
+                    <label class="" for="{{field.name}}">{{field.label}}</label>
+                    <p-editor [id]="field.name" formControlName="{{field.name}}" [style]="{'height':'220px'}"></p-editor>
+                  </div>
+                </ng-template>
+                <ng-template [ngSwitchCase]="'media'">
+                  <div class="field">
+                    <label class="" for="{{field.name}}">{{field.label}}</label>
+                    <app-file-upload formControlName="{{field.name}}"></app-file-upload>
+                  </div>
+                </ng-template>
+              </ng-container>
             </ng-container>
-          </ng-container>
+          </div>
         </div>
-        <div class="tw-w-full"></div>
       </div>
-    </p-panel>
-    
-    <p-toolbar styleClass="tw-sticky tw-bottom-0 tw-mt-10 tw-w-auto">
-      <div class="p-toolbar-group-left">
-        <button icon="pi pi-cancel" class="p-button-danger" pButton label="Cancel"></button>
-      </div>
-      <div class="p-toolbar-group-right">
-        <button icon="pi pi-plus" pButton label="Create and Mint" [loading]="isMinting" [disabled]="certForm.invalid" ></button>
-      </div>
-    </p-toolbar>
-  </form>    
+    </form>
+    <div class="tw-sticky tw-mt-auto tw-bottom-0 tw-w-full tw-px-10 tw-py-3 tw-flex tw-items-center tw-justify-end" style="background-color: var(--surface-card);">
+      <button icon="pi pi-plus" style="width: auto;" pButton label="Create and Mint" [loading]="isMinting" [disabled]="certForm.invalid" (click)="onSubmit()"></button>
+    </div>
+  </div>
 </div>

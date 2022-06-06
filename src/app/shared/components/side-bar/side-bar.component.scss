@@ -1,0 +1,42 @@
+:host {
+  z-index: 99;
+}
+
+
+:host ::ng-deep {
+  .theme-switch {
+    background-color: var(--surface-ground);
+    width: 100%;
+    padding: 4px;
+    display: flex;
+    justify-content: space-between;
+    height: 44px;
+
+    .active {
+      background-color: var(--surface-card);
+      height: 100%;
+      color: var(--text-color);
+
+      .pi {
+        font-weight: 600;
+      }
+    }
+  }
+
+  ul.nav-side {
+    li {
+      color: var( --text-color-tertiary);
+      padding: 8px 16px;
+      border-radius: 6px;
+      &:hover {
+        color: var( --primary-color);
+      }
+    }
+
+    li.active {
+      color: var( --primary-color);
+      background-color: var(--surface-b);
+      font-weight: 500;
+    }
+  }
+}

@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormControl, FormArray, AbstractControl } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { map, merge, of, Subject, takeUntil } from 'rxjs';
 import { Category } from 'src/app/shared/models/category';
 import { CategoryService } from 'src/app/shared/services/category.service';
+import { slugify } from 'src/app/shared/utils/string';
 
 @Component({
   selector: 'app-new-category',
   templateUrl: './new-category.component.html',
   styleUrls: ['./new-category.component.scss']
 })
-export class NewCategoryComponent implements OnInit {
-
-  step: 'info' | 'field' = 'info';
+export class NewCategoryComponent implements OnInit, OnDestroy {
   categoryForm: FormGroup;
   typeOptions = ['String', 'Number', 'Boolean', 'Media', 'Array'];
   draggedIndex: any;
+  changes$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -37,14 +38,44 @@ export class NewCategoryComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.changes$.next();
+    this.changes$.complete();
   }
+
+  ngOnInit(): void {
+    this.watchForChanges();
+  }
+
+  watchForChanges() {
+    this.changes$.next();
+    merge(...this.fields.controls.map((control: AbstractControl, index: number) => {
+      const group = control as FormGroup;
+      if (group) {
+        return group.get('label')?.valueChanges.pipe(
+          takeUntil(this.changes$),
+          map(value => ({
+            index,
+            control,
+            value
+          }))
+        );
+      }
+      return of(null)
+    })).subscribe((val: any) => {
+      const { index, value } = val;
+      const group = this.fields.at(index) as FormGroup;
+      if (group && value) {
+        group.get('name')?.setValue(slugify(value))
+      }
+    })
+  };
 
   get fields() {
     return this.categoryForm.controls["fields"] as FormArray;
   }
 
-  addNewField(){
+  addNewField() {
     this.fields.push(this.fb.group({
       label: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),
@@ -52,21 +83,11 @@ export class NewCategoryComponent implements OnInit {
       mandatory: new FormControl(true, [Validators.required]),
       options: new FormControl(null),
     }));
+    this.watchForChanges();
   }
 
   removeField(index: number) {
-    if (this.fields.length === 1) {
-      return;
-    }
     this.fields.removeAt(index);
-  }
-
-  nextStep() {
-    const info = this.categoryForm.get('info') as FormGroup;
-
-    if (this.step === 'info' && info.valid) {
-      this.step = 'field';
-    }
   }
 
   get info() {
@@ -99,25 +120,4 @@ export class NewCategoryComponent implements OnInit {
       summary: `New category has been added: ${categoryId}`,
     });
   }
-
-  dragStart(event: any, startIndex: any) {
-    this.draggedIndex = startIndex;
-  }
-
-  dragEnd(event: any) {
-    this.draggedIndex = null;
-  }
-
-  drop(event: any, dropIndex: any) {
-    if (this.draggedIndex && this.draggedIndex !== dropIndex) {
-      const fields = this.categoryForm.controls["fields"] as FormArray;
-      
-      const currentGroup = fields.at(this.draggedIndex);
-      fields.removeAt(this.draggedIndex);
-      fields.insert(dropIndex, currentGroup);
-
-      this.draggedIndex = null;
-    }
-  }
-
 }

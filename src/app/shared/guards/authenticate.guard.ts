@@ -21,6 +21,7 @@ export class AuthenticateGuard implements CanActivate, CanLoad {
         this.dialogSvc.open(NearLoginComponent, {
           header: 'NEAR is here',
           width: '450px',
+          styleClass: 'tw-rounded-b-md'
         });
       }
       return isLoggedIn;

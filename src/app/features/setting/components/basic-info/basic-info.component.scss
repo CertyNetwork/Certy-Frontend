@@ -1,0 +1,17 @@
+:host ::ng-deep {
+  .profile-img {
+    .p-avatar.p-avatar-xl {
+      width: 8rem;
+      height: 8rem;
+    }
+    .p-button {
+      width: 24px;
+      height: 24px;
+      right: 0px;
+
+      .p-button-icon {
+        font-size: 8px;
+      }
+    }
+  }
+}

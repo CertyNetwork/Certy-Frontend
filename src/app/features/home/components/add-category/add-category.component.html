@@ -2,19 +2,19 @@
   <ng-container [ngSwitch]="step">
     <ng-template [ngSwitchCase]="'info'" formGroupName="info">
       <div class="field">
-        <label for="title">Tile</label>
+        <label for="title">Category title</label>
         <input name="title" type="text" pInputText formControlName="title"/>
       </div>
       <div class="field">
-        <label for="description">Description</label>
+        <label for="description">Category description</label>
         <textarea pInputTextarea [autoResize]="true" name="description" formControlName="description"></textarea>
       </div>
       <div class="field">
-        <label for="cover">Cover image</label>
+        <label for="cover">Cover images</label>
         <app-file-upload formControlName="cover_image"></app-file-upload>
       </div>
       <div class="tw-mt-5 tw-flex tw-justify-end">
-        <button pButton [disabled]="info.invalid" class="p-button-outlined tw-mt-4" style="width: auto" label="Next" (click)="nextStep()"></button>
+        <button pButton [disabled]="info.invalid" icon="pi pi-arrow-right" iconPos="right" class="p-button-primary tw-mt-4" style="width: auto" label="Next" (click)="nextStep()"></button>
       </div>
     </ng-template>
   
@@ -66,12 +66,12 @@
           </div>
         </ng-container>
         <div class="tw-flex tw-justify-end">
-          <button pButton class="p-button-text tw-my-3" style="width: auto;" label="Add New Field" icon="pi pi-plus" (click)="addNewField()"></button>
+          <button pButton class="p-button-outlined tw-my-3" style="width: auto;" label="Add Field" icon="pi pi-plus" (click)="addNewField()"></button>
         </div>
       </div>
       <div class="tw-flex tw-justify-between tw-mt-5">
         <button pButton class="p-button-text tw-mt-4" icon="pi pi-chevron-left" style="width: auto" label="Back" (click)="step = 'info'"></button>
-        <button pButton class="p-button-outlined tw-mt-4" [disabled]="fields.status === 'INVALID'" [loading]="categoryService.addingCategory$ | async" style="width: auto" label="Done" (click)="onSubmit()"></button>
+        <button pButton class="p-button-primary tw-mt-4" [disabled]="fields.status === 'INVALID'" [loading]="categoryService.addingCategory$ | async" style="width: auto" label="Done" (click)="onSubmit()"></button>
       </div>
     </ng-template>
   </ng-container>

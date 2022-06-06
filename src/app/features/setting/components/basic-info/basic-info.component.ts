@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
@@ -21,12 +22,16 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public userService: UserService,
     public authService: AuthService,
+    private messageService: MessageService
   ) {
     this.profileForm = this.fb.group({
       display_name: [null, [Validators.required]],
       email: [null, [Validators.required, Validators.email]],
       location: [null, [Validators.required]],
       bio: [null, [Validators.required]],
+      // signature: [null],
+      linkedin_link: [null],
+      github: [null]
     });
   }
 
@@ -57,7 +62,12 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
     if (this.profileForm.invalid) {
       return;
     }
-    this.userService.updateUserProfile(this.profileForm.value)
+    this.userService.updateUserProfile(this.profileForm.value).then(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: `Profile has been updated successfully`,
+      });
+    })
   }
 
   async uploadAvatar(event: any, uploader: FileUpload) {

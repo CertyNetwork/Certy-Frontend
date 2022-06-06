@@ -41,6 +41,9 @@ import { DragDropModule } from 'primeng/dragdrop';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SidebarModule } from 'primeng/sidebar';
 import { ListboxModule } from 'primeng/listbox';
+import {  BadgeModule } from 'primeng/badge';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SignaturePadModule } from 'angular2-signaturepad';
 import { NearLoginComponent } from './components/near-login/near-login.component';
 import { CategoryCoverPipe } from './pipes/category-cover.pipe';
 import { ImageFallbackDirective } from './directives/image-fallback';
@@ -48,6 +51,9 @@ import { CategoryResolver } from './resolvers/category.resolver';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ProfileCoverPipe } from './pipes/profile-image.pipe';
 import { CategorySelectorComponent } from './components/category-selector/category-selector.component';
+import { SignaturePadComponent } from './components/signature-pad/signature-pad.component';
+import { AppShellAsideView } from './directives/app-shell-aside-view';
+import { AdDirective } from './directives/ad.directive';
 
 @NgModule({
   declarations: [
@@ -59,6 +65,7 @@ import { CategorySelectorComponent } from './components/category-selector/catego
     SideBarComponent,
     NearLoginComponent,
     FileUploadComponent,
+    CategorySelectorComponent,
 
     // Pipes
     CategoryCoverPipe,
@@ -66,7 +73,10 @@ import { CategorySelectorComponent } from './components/category-selector/catego
 
     //
     ImageFallbackDirective,
-     CategorySelectorComponent,
+    AdDirective,
+    AppShellAsideView,
+
+    SignaturePadComponent,
   ],
   imports: [
     CommonModule,
@@ -105,6 +115,9 @@ import { CategorySelectorComponent } from './components/category-selector/catego
     SkeletonModule,
     SidebarModule,
     ListboxModule,
+    SignaturePadModule,
+    ProgressSpinnerModule,
+    BadgeModule
   ],
   exports: [
     CommonModule,
@@ -143,6 +156,9 @@ import { CategorySelectorComponent } from './components/category-selector/catego
     SkeletonModule,
     SidebarModule,
     ListboxModule,
+    SignaturePadModule,
+    ProgressSpinnerModule,
+    BadgeModule,
 
     // Pipes
     CategoryCoverPipe,
@@ -150,6 +166,8 @@ import { CategorySelectorComponent } from './components/category-selector/catego
 
     // Directives
     ImageFallbackDirective,
+    AdDirective,
+    AppShellAsideView,
 
     // components
     HeaderComponent,
@@ -158,6 +176,7 @@ import { CategorySelectorComponent } from './components/category-selector/catego
     NearLogoComponent,
     SideBarComponent,
     FileUploadComponent,
+    SignaturePadComponent
   ],
   providers: [
     CategoryResolver

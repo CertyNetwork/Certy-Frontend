@@ -4,6 +4,32 @@
       margin-left: auto;
     }
   }
+
+  .ngx-dropzone {
+    background-color: var(--input-background);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ngx-dropzone-preview {
+      background-color: var(--surface-overlay);
+      background-image: none;
+    }
+  }
+
+  ngx-dropzone-label {
+    z-index: inherit !important;
+    color: var(--text-color);
+  }
+
+  .upload-label {
+    background-color: var(--surface-card);
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
   
   .p-progressbar {
     height: .5rem;

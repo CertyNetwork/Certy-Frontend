@@ -1,0 +1,15 @@
+:host ::ng-deep {
+  height: 100%;
+  display: block;
+  
+  .category-list-detail {
+    .category-date {
+      color: var(--text-color-tertiary-1);
+    }
+  }
+
+  .p-dataview-content {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+}

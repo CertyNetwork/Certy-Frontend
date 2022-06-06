@@ -4,25 +4,26 @@
 @import 'tailwindcss/utilities';
 
 :root .light {
-  --text-color: #101530;
+  // --text-color: #101530;
   --text-color-secondary: #6E6B68;
   --primary-color: #2A85FF;
   --primary-color-text: #ffffff;
   --input-border-color: #ced4da;
   --border-color: #d8dce5;
-  --sell-color: #f74055;
-  --buy-color: #13b989;
   --blue-color: #038bf4;
   --danger: #f74055;
   --success: #13b989;
   --warning: #ffc107;
-  --background-color: rgb(245, 245, 245);
-  --panel-color: rgb(255, 255, 255);
+  --background-color: #F7F5F4;
   --input-background: rgba(230, 232, 234, 0.6);
   --btn-background: rgb(230, 232, 234);
   --panel-overlay-color: rgb(24, 26, 32, 0.6);
   --backdrop-color: rgb(0, 0, 0, 0.288);
-  --text-color-tertiary: #0A0A0A;
+  --text-color-tertiary: #6F767E;
+  --label-color: #33383F;
+  --text-color-tertiary-1: #9A9FA5;
+  --button-color-tertiary: #EFEFEF;
+  --surface-w: #F4F4F4;
 }
 
 :root .dark {
@@ -31,20 +32,31 @@
   --primary-color: #2A85FF;
   --primary-color-text: #ffffff;
   --input-border-color: #ced4da;
-  --border-color: rgb(37, 41, 48);
-  --sell-color: #f74055;
-  --buy-color: #13b989;
+  --border-color: #111315;
   --blue-color: #038bf4;
   --danger: #f74055;
   --success: #13b989;
   --warning: #ffc107;
   --btn-background: rgb(38 54 67);
   --background-color: rgb(6, 13, 19);
-  --panel-color:#071426;
-  --input-background: #040d19;
+  --input-background: #272B30;
   --panel-overlay-color: rgba(122, 115, 115, 0.5);
   --backdrop-color: rgb(6, 13, 19, 0.6);
   --text-color-tertiary: #f8f8f8;
+  --surface-card: #1A1D1F;
+  --text-color-tertiary: #6F767E;
+  --label-color: #FCFCFC;
+  --text-color-tertiary-1: #9A9FA5;
+  --button-color-tertiary: #33383F;
+  --surface-w: #272B30;
+
+  .shadow-thin {
+    box-shadow: inset 0px -2px 1px rgba(0, 0, 0, 0.4), inset 0px 1px 1px rgba(255, 255, 255, 0.11);
+  }
+
+  .shadow-neat {
+    box-shadow: 0px 4px 8px -4px rgba(0, 0, 0, 0.25), inset 0px -1px 1px rgba(0, 0, 0, 0.49), inset 0px 2px 1px rgba(255, 255, 255, 0.06);
+  }
 }
 
 html {
@@ -63,7 +75,7 @@ body {
 
 .field {
   label {
-    color: var(--text-color-secondary);
+    color: var(--label-color);
   }
   
   & + .field {
@@ -91,8 +103,9 @@ body {
   }
 }
 
-.p-inputtext {
+.p-inputtext, .p-editor-container .p-editor-content .ql-editor {
   background-color: var(--input-background);
+  border: none;
   &:focus-within {
     background-color: transparent;
   }
@@ -103,4 +116,51 @@ ngx-dropzone {
   &:focus-within {
     background-color: transparent;
   }
+}
+
+.p-dialog {
+  max-width: 95%;
+
+  div[class^='p-dialog']:last-child {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .p-dialog-header {
+    .p-dialog-header-icons {
+      .p-dialog-header-icon {
+        background-color: var(--surface-ground);
+
+        .pi {
+          font-size: 0.875em;
+        }
+      }
+    }
+  }
+}
+
+.p-dataview-header {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.surface-card {
+  background-color: var(--surface-card);
+}
+
+.p-toast .p-toast-message .p-toast-message-content {
+  border-width: 0;
+  overflow-wrap: anywhere;
+
+  .p-toast-message-icon {
+    align-self: center;
+  }
+}
+
+.shadow-thin {
+  box-shadow: inset 0px -2px 1px rgba(0, 0, 0, 0.05), inset 0px 1px 1px #FFFFFF;
+}
+
+.shadow-neat {
+  box-shadow: 0px 4px 8px -4px rgba(0, 0, 0, 0.25), inset 0px -1px 1px rgba(0, 0, 0, 0.04), inset 0px 2px 0px rgba(255, 255, 255, 0.25);
 }

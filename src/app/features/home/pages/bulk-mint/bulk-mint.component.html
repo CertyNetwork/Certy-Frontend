@@ -1,76 +1,81 @@
-<div class="tw-container" *ngIf="category$ | async as category">
-  <h1 class="tw-font-semibold tw-text-xl tw-my-10">Bulk Mint</h1>
-  <p-panel>
-    <ng-template pTemplate="header">
-      <div class="tw-flex tw-flex-row tw-w-full tw-items-center">
-        <div class="tw-text-lg">
-          <span class="tw-font-semibold">Category: </span>
-          <span class="tw-font-bold" [ngStyle]="{color:'var(--primary-color)'}">{{category.title}}</span>
-        </div>
-        <button pButton icon="pi pi-download" class="tw-ml-auto p-button-secondary" [loading]="sampling" label="Download CSV Template" #downloadSampleButton></button>
+<div class="tw-flex tw-h-full tw-flex-no-wrap tw-overflow-hidden">
+  <app-side-bar></app-side-bar>
+  <div class="tw-w-full tw-flex tw-flex-col tw-mx-auto tw-pt-10 tw-h-full tw-overflow-y-auto" *ngIf="category$ | async as category">
+    <h1 class="tw-font-bold tw-text-3xl tw-mx-10 tw-mb-5">Bulk Mint: {{category.title}}</h1>
+    <div class="tw-rounded-md tw-mx-10 shadow-5" style="background-color: var(--surface-card);">
+      <div class="tw-flex tw-w-full tw-pt-4 tw-px-5">
+        <button *ngIf="step === 'select_file'" pButton icon="pi pi-download" class="tw-w-full md:tw-w-auto md:tw-ml-auto p-button-secondary" [loading]="sampling" label="Download CSV Template" #downloadSampleButton></button>
       </div>
-    </ng-template>
-    <ng-container [ngSwitch]="step">
-      <ng-template [ngSwitchCase]="'select_file'">
-        <div class="p-fluid">
-          <div class="field">
-            <label class="">Upload CSV File</label>
-            <ngx-dropzone (change)="onSelect($event)" [multiple]="false" accept="text/csv">
-              <ngx-dropzone-label>
-                <span class="tw-block mb-3">Drop files or <span class="tw-text-lime-500">browse your device</span></span>
-              </ngx-dropzone-label>
-              <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-                <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-              </ngx-dropzone-preview>
-            </ngx-dropzone>
-          </div>
-        </div>
-      </ng-template>
-      <ng-template [ngSwitchCase]="'preview'">
-        <div class="p-fluid">
-          <div class="field">
-            <label class="">Review CSV Uploaded File: <span class="tw-font-medium">{{files[0].name}}</span></label>
-            <p-table [columns]="cols" [value]="rowData" dataKey="title" styleClass="p-datatable-data" [rowHover]="true"
-              [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" responsiveLayout="scroll"
-              [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
-              <ng-template pTemplate="header" let-columns>
-                <tr>
-                  <th *ngFor="let col of columns">
-                    {{col.header}}
-                  </th>
-                  <th style="width: 8rem"></th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-rowData let-columns="columns">
-                <tr>
-                  <td *ngFor="let col of columns">
-                    {{rowData[col.field]}}
-                  </td>
-                  <td style="text-align: center">
-                    <button pButton type="button" class="p-button-rounded p-button-secondary" icon="pi pi-circle-fill" *ngIf="rowData.processing_status === 'processing'" [loading]="true"></button>
-                    <button pButton type="button" class="p-button-rounded p-button-success" icon="pi pi-check" *ngIf="rowData.processing_status === 'completed'"></button>
-                    <button pButton type="button" class="p-button-rounded p-button-danger" icon="pi pi-times" *ngIf="rowData.processing_status === 'error'"></button>
-                  </td>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="emptymessage">
-                <tr>
-                  <td colspan="8">No records found.</td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
-        </div>
-      </ng-template>
-    </ng-container>
-  </p-panel>
-  <p-toolbar styleClass="tw-sticky tw-bottom-0 tw-mt-10 tw-w-auto">
-    <div class="p-toolbar-group-left" *ngIf="step === 'preview'">
-      <button icon="pi pi-cancel" class="p-button-danger" (click)="step = 'select_file'" pButton label="Back"></button>
+      <p-panel [showHeader]="false">
+        <ng-container [ngSwitch]="step">
+          <ng-template [ngSwitchCase]="'select_file'">
+            <div class="p-fluid">
+              <div class="field">
+                <label class="">Upload CSV File</label>
+                <div class="ngx-dropzone" ngx-dropzone accept="text/csv" (change)="onSelect($event)" [multiple]="false" [disableClick]="files.length > 0">
+                  <ngx-dropzone-label>
+                    <span class="upload-label mb-3">
+                      <span class="pi pi-upload tw-mr-2"></span>
+                      Click or drop file
+                    </span>
+                  </ngx-dropzone-label>
+                  <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                    <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
+                  </ngx-dropzone-preview>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template [ngSwitchCase]="'preview'">
+            <div class="p-fluid">
+              <div class="field">
+                <label>Review CSV Uploaded File: <span class="tw-font-medium">{{files[0].name}}</span></label>
+                <p-table [columns]="cols" [value]="rowData" dataKey="title" styleClass="p-datatable-data" [rowHover]="true"
+                  [rows]="50" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" responsiveLayout="scroll"
+                  [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+                  <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th style="width: 3rem"></th>
+                      <th *ngFor="let col of columns">
+                        {{col.header}}
+                      </th>
+                      <th style="width: 8rem"></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr>
+                      <td>
+                        <p-progressSpinner [style]="{width: '40px', height: '40px'}" *ngIf="rowData.validate_status === 'PENDING'"></p-progressSpinner>
+                        <i class="pi pi-check" style="color: var(--success);" *ngIf="rowData.validate_status === 'READY'"></i>
+                        <i class="pi pi-exclamation-circle" style="color: var(--danger);" tooltipPosition="top" pTooltip="{{rowData.validate_error}}" i *ngIf="rowData.validate_status === 'ERROR'"></i>
+                      </td>
+                      <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                      </td>
+                      <td style="text-align: center">
+                        <button pButton type="button" class="p-button-rounded p-button-secondary" icon="pi pi-circle-fill" *ngIf="rowData.processing_status === 'processing'" [loading]="true"></button>
+                        <button pButton type="button" class="p-button-rounded p-button-success" icon="pi pi-check" *ngIf="rowData.processing_status === 'completed'"></button>
+                        <button pButton type="button" class="p-button-rounded p-button-danger" con="pi pi-times" *ngIf="rowData.processing_status === 'error'"></button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="8">No records found.</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </p-panel>
     </div>
-    <div class="p-toolbar-group-right tw-ml-auto">
-      <button *ngIf="step === 'select_file'" icon="pi pi-arrow-right" [disabled]="!files.length" [loading]="fileLoading" (click)="preview()" pButton label="Continue"></button>
-      <button *ngIf="step === 'preview'" icon="pi pi-check" [disabled]="!rowData.length" [loading]="fileProcessing" pButton label="Process" (click)="process()"></button>
+   
+    <div class="tw-sticky tw-mt-auto tw-bottom-0 tw-w-full tw-px-10 tw-py-3 tw-flex tw-items-center tw-justify-between" style="background-color: var(--surface-card);">
+      <button *ngIf="step === 'preview'" icon="pi pi-chevron-left" class="p-button-text p-button-info" [disabled]="fileProcessing" (click)="step = 'select_file'" pButton label="Back"></button>
+      <button *ngIf="step === 'select_file'" icon="pi pi-arrow-right" class="tw-ml-auto" iconPos="right" [disabled]="!files.length" [loading]="fileLoading" (click)="preview()" pButton label="Continue"></button>
+      <button *ngIf="step === 'preview'" icon="pi pi-check" iconPos="right" [disabled]="!isValidData()" [loading]="fileProcessing" pButton label="Process" (click)="process(category)"></button>
     </div>
-  </p-toolbar>  
+  </div>
 </div>

@@ -1,0 +1,7 @@
+:host ::ng-deep {
+  .category-item {
+    &:hover {
+      background-color: var(--surface-ground);
+    }
+  }
+}

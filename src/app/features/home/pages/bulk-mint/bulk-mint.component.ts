@@ -1,17 +1,20 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
+import { ActivatedRoute } from '@angular/router';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Papa } from 'ngx-papaparse';
 import {
-  catchError, defer, finalize, forkJoin, from, fromEvent, ignoreElements,
-  map, merge, mergeMap, Observable, of, Subject, Subscription, tap
+  from, fromEvent, lastValueFrom,
+  map, Observable, Subscription, tap
 } from 'rxjs';
 import {
   debounceTime,
   switchMap,
 } from 'rxjs/operators';
+import * as uuid from 'uuid';
 import { ContractService } from 'src/app/shared/services/certify.contract.service';
 import { Category } from 'src/app/shared/models/category';
-import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { Storage } from 'src/app/shared/services/storage';
 
 @Component({
   selector: 'app-bulk-mint',
@@ -19,10 +22,14 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./bulk-mint.component.scss']
 })
 export class BulkMintComponent implements OnInit {
+  EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
   category$: Observable<Category>;
   sampling = false;
   step: 'select_file' | 'preview' | 'processing' = 'select_file';
   files: File[] = [];
+  mediaFiles: {
+    [key: string]: File
+  } = {};
   rowData: any[] = [];
   fileLoading: boolean = false;
   fileProcessing: boolean = false;
@@ -33,7 +40,10 @@ export class BulkMintComponent implements OnInit {
     private contractSvc: ContractService,
     private confirmationService: ConfirmationService,
     private papa: Papa,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private authService: AuthService,
+    private storage: Storage,
+    private messageService: MessageService
   ) {
     this.category$ = this.activeRoute.data.pipe(
       map(data => data['category'] as Category)
@@ -44,42 +54,11 @@ export class BulkMintComponent implements OnInit {
     //
   }
 
-  async onSubmit () {
-    // const coverImage = this.files[0];
-    // const { data: fileUploadResult, error: fileError } = await this.contractSvc.upload(coverImage);
-
-    // if (fileError) {
-    //   console.error(fileError);
-    //   return;
-    // }
-
-    // // setIsMinting(false);
-    // const { uri, hash } = fileUploadResult;
-    // const { basicInfo, additionalInfo } = this.certForm.value;
-    // this.contractSvc.mintCertificate({
-    //   title: basicInfo.title,
-    //   media: uri,
-    //   description: basicInfo.description,
-    //   issued_at: Date.now(),
-    //   transferred: false,
-    //   properties: {
-    //     certification_authority_name: additionalInfo?.certification_authority_name,
-    //     major: additionalInfo?.major,
-    //     degree_title: additionalInfo?.degree_title,
-    //     degree_classification: additionalInfo?.degree_classification,
-    //     hash: hash,
-    //   }
-    // }).then((result) => {
-    //   console.log(result);
-    // }).catch(e => console.log(e));
-  }
-
   onSelect(event: any) {
     this.files = event.addedFiles;
   }
   
   onRemove(event: any) {
-    console.log(event);
     this.files.splice(this.files.indexOf(event), 1);
   }
 
@@ -93,7 +72,9 @@ export class BulkMintComponent implements OnInit {
           },
           reject: () => {
             return rs(false);
-          }
+          },
+          acceptButtonStyleClass: 'p-button-info',
+          rejectButtonStyleClass: 'p-button-secondary mr-5'
         });
       }));
     }
@@ -110,7 +91,11 @@ export class BulkMintComponent implements OnInit {
         this.fileLoading = false;
         this.step = 'preview';
         this.cols = result.meta.fields.map(f => ({ field: f, header: f.toLocaleUpperCase() })),
-        this.rowData = result.data;
+        this.rowData = result.data.filter((dt: any) => dt && dt.walletId && dt.title && dt.media).map((dt: any) => ({
+          ...dt,
+          validate_status: 'PENDING'
+        }));
+        this.validateData();
       },
       error: () => {
         this.fileLoading = false;
@@ -122,73 +107,93 @@ export class BulkMintComponent implements OnInit {
     });
   }
 
-  process() {
-    this.fileProcessing = true;
-    const arrayOfObservables = this.rowData.map(data => {
-      return from(this.contractSvc.mintCertificate({
-        title: data.title,
-        media: 'uri',
-        description: data.description,
-        issued_at: Date.now(),
-        reference: '',
-      }));
-    });
+  async validateData() {
+    for (let i = 0; i < this.rowData.length; i++) {
+      const row = this.rowData[i];
+      if (!row.walletId || !row.title || !row.media || !row.description) {
+        row.validate_status = 'ERROR';
+        row.validate_error = 'Incorrect data';
+        continue;
+      }
 
-    const result = this.processBulkMint(arrayOfObservables);
-    result.pipe(
-      mergeMap(([finalResult, progress]) => merge(
-        progress.pipe(
-          tap((value) => {
-            console.log(`${value} completed`);
-            if (value === 100) {
-              this.fileProcessing = false;
-            }
-          }),
-          ignoreElements()
-        ),
-        finalResult
-      ))
-    ).subscribe(() => {
-      
-    });
+      // check walletId
+      const isWalletIdNotExist = await lastValueFrom(this.authService.checkIfWalletIdNotExists(row.walletId));
+      if (isWalletIdNotExist) {
+        row.validate_status = 'ERROR';
+        row.validate_error = 'Invalid Wallet Id';
+        continue;
+      }
+
+      // check media
+      if (!this.mediaFiles[row.media]) {
+        const isValidMedia = await fetch(row.media, {
+          mode: 'no-cors'
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Not found');
+          }
+          return response.blob();
+        })
+        .then(blob => {
+          this.mediaFiles[row.media] = new File([blob], `${uuid.v4()}`);
+          return true;
+        })
+        .catch((e) => {
+          console.log(e);
+          return false;
+        });
+
+        if (!isValidMedia) {
+          row.validate_status = 'ERROR';
+          row.validate_error = 'Invalid media filed';
+          continue;
+        }
+      }
+
+      row.validate_status = 'READY';
+    }
   }
 
-  private processBulkMint(arrayOfObservables: Observable<any>[]) {
-    return defer(() => {
-      let counter = 0;
-      const percent$ = new Subject();
-  
-      const modifiedObservablesList = arrayOfObservables.map(
-        (item, index) => {
-          this.rowData[index].processing_status = 'processing';
-          this.rowData = [...this.rowData];
-          return item.pipe(
-            finalize(() => {
-              const percentValue = ++counter * 100 /  arrayOfObservables.length;
-              percent$.next(percentValue);
-            }),
-            tap(() => {
-              this.rowData[index].processing_status = 'completed';
-              this.rowData = [...this.rowData];
-            }),
-            catchError(() => {
-              this.rowData[index].processing_status = 'error';
-              this.rowData = [...this.rowData];
-              return of(false);
-            }),
-          )
-        }
-      );
+  async process(category: Category) {
+    const validCerts = this.rowData.filter(dt => dt.validate_status === 'READY');
+    if (!validCerts || !validCerts.length) {
+      return;
+    }
+
+    this.fileProcessing = true;
+    const now = Date.now();
+
+    const files = Object.values(this.mediaFiles);
+    const additionalFields = category.fields || [];
+    const receiverIds = validCerts.map(dt => dt.walletId);
+
+    try {
+      const cid = await this.storage.uploadToWeb3Storage(files);
     
-      const finalResult$ = forkJoin(modifiedObservablesList).pipe(
-        tap(() => {
-          percent$.next(100);
-          percent$.complete();
+      const metaDatas = validCerts.map(dt => {
+        const reference: any = {};
+        for (const fd of additionalFields) {
+          reference[fd.name] = dt[fd.name];
         }
-      ));
-      
-      return of([finalResult$, percent$.asObservable()]);
-    });
+        return {
+          title: dt.title,
+          description: dt.description,
+          media: `https://${cid}.ipfs.dweb.link/${this.mediaFiles[dt.media].name}`,
+          issued_at: now,
+          reference: JSON.stringify(reference),
+        };
+      });
+  
+      await this.contractSvc.bulkMintCertificate(receiverIds, metaDatas, category.id);
+    } catch (e: any) {
+      this.messageService.add({
+        severity: 'error',
+        summary: `Error while bulk minting: ${e.message}`,
+      });
+    } finally {
+      this.fileProcessing = false;
+    }
   }
 
   @ViewChild('downloadSampleButton') set manageBankButton(content: ElementRef) {
@@ -206,7 +211,12 @@ export class BulkMintComponent implements OnInit {
           const sampleData = fields?.reduce((a: any, c) => {
             a[c.name] = `${c.label} (${c.data_type})`;
             return a;
-          }, {});
+          }, {
+            walletId: 'Sample walletId.',
+            title: 'Sample title',
+            description: 'Sample description',
+            media:  'Sample media url',
+          });
           const csvData = this.papa.unparse([sampleData], {
             header: true,
           });
@@ -225,5 +235,12 @@ export class BulkMintComponent implements OnInit {
         }
       }));
     }
+  }
+
+  isValidData(): boolean {
+    if (!this.rowData || !this.rowData.length) {
+      return false;
+    }
+    return this.rowData.some((dt: any) => dt.validate_status === 'READY')
   }
 }

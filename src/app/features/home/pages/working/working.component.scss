@@ -1,0 +1,14 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: var(--surface-card);
+
+  @media screen and (max-width: 991px) {
+    display: block;
+
+    .tw-container {
+      margin-top: auto;
+    }
+  }
+}

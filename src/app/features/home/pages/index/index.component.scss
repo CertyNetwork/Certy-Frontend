@@ -6,13 +6,31 @@
   background-repeat: no-repeat;
   background-position: right 15% top 50%;
   background-size: contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 
   @media screen and (max-width: 991px) {
     background-size: 300px;
-    background-position: bottom;
+    background-position: top;
+    min-height: 500px;
+
+    .tw-container {
+      margin-top: auto;
+    }
   }
 }
 
 .section-bg-white {
-  background-color: var(--panel-color);
+  background-color: var(--surface-card);
+}
+
+.section-bg-sky {
+  background-color: #f1f7fd;
+}
+
+:host-context(.dark) {
+  .section-bg-sky {
+    background-color: var(--surface-ground);
+  }
 }

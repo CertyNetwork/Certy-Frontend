@@ -1,32 +1,46 @@
-<div class="grid tw-min-h-full">
-  <div class="col-12 lg:col tw-px-4">
+<div class="grid">
+  <div class="col-12 lg:col tw-px-14">
     <div class="tw-h-full tw-flex tw-flex-col">
       <h3 class="tw-text-lg tw-font-semibold tw-border-l-8 tw-pl-4 tw-border-sky-500">Individual</h3>
-      <p class="tw-mt-5 tw-text-gray-400">Just scan passports, driver's licenses or other forms of national or state identification cards to quickly verify the digital identities of individual user.</p>
+      <p class="tw-mt-5 p-text-secondary">Just scan passports, driver's licenses or other forms of national or state identification cards to quickly verify the digital identities of individual user.</p>
       <p-divider styleClass="tw-my-5"></p-divider>
       <ul>
-        <li class="tw-py-4"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Passport</li>
-        <li class="tw-py-4"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>National ID Card</li>
-        <li class="tw-py-4"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Selfie Image</li>
+        <li class="tw-py-4 tw-font-semibold option-label"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Passport</li>
+        <li class="tw-py-4 tw-font-semibold option-label"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>National ID Card</li>
+        <li class="tw-py-4 tw-font-semibold option-label"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Selfie Image</li>
       </ul>
       <div class="tw-py-8"></div>
-      <button pButton class="p-button-outlined p-button-info tw-mt-auto" label="Start Verifying"></button>
+      <button pButton class="p-button-outlined p-button-info tw-mt-auto" label="Start Verifying" (click)="startIndividualKyc()"></button>
     </div>
   </div>
-  <div class="col-12 lg:col tw-px-4 tw-mt-32 lg:tw-mt-0">
+  <div class="col-12 lg:col tw-px-14 tw-mt-32 lg:tw-mt-0">
     <div class="tw-h-full tw-flex tw-flex-col">
       <h3 class="tw-text-lg tw-font-semibold tw-border-l-8 tw-pl-4 tw-border-sky-700">Organization</h3>
-      <p class="tw-mt-5 tw-text-gray-400">Contact us to verify your organization.</p>
+      <p class="tw-mt-5 p-text-secondary">Contact us to verify your organization.</p>
       <p-divider styleClass="tw-my-5"></p-divider>
       <ul>
-        <li class="tw-py-4"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Email</li>
-        <li class="tw-py-4"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Contact Name</li>
-        <li class="tw-py-4"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Organization Name</li>
-        <li class="tw-py-4"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Address</li>
-        <li class="tw-py-4"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Phone Number</li>
+        <li class="tw-py-4 tw-font-semibold option-label"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Email</li>
+        <li class="tw-py-4 tw-font-semibold option-label"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Contact Name</li>
+        <li class="tw-py-4 tw-font-semibold option-label"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Organization Name</li>
+        <li class="tw-py-4 tw-font-semibold option-label"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Address</li>
+        <li class="tw-py-4 tw-font-semibold option-label"><span class="tw-text-blue-500 tw-mr-2 pi pi-check"></span>Phone Number</li>
       </ul>
       <div class="tw-py-8"></div>
-      <button pButton class="p-button-info tw-mt-auto" label="Start Verifying"></button>
+      <button pButton class="p-button-info tw-mt-auto" label="Start Verifying" (click)="requestCorporateInfo()"></button>
     </div>
   </div>
 </div>
+
+<p-dialog [modal]="true" [draggable]="false" [breakpoints]="{'960px': '75vw'}" [style]="{width: '400px'}" [(visible)]="displayCorporateConfirm">
+  <div class="flex flex-column align-items-center mb-4 ng-tns-c34-3">
+    <div class="flex align-items-center justify-content-center border-circle mb-3">
+      <img class="tw-object-contain tw-h-36 tw-w-36" src="/assets/images/check_icon.png"/>
+    </div>
+  </div>
+  <p class="tw-text-lg p-3 tw-text-center m-0"><strong>Certy</strong> has received your organization's information. We will contact you within the next 48 hours. Thank you!</p>
+  <ng-template pTemplate="footer">
+    <div class="flex tw-items-center tw-justify-center">
+      <button pButton label="Done" (click)="displayCorporateConfirm = false"></button>
+    </div>
+  </ng-template>
+</p-dialog>
