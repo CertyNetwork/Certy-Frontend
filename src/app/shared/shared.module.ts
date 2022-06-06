@@ -43,7 +43,6 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ListboxModule } from 'primeng/listbox';
 import {  BadgeModule } from 'primeng/badge';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { SignaturePadModule } from 'angular2-signaturepad';
 import { NearLoginComponent } from './components/near-login/near-login.component';
 import { CategoryCoverPipe } from './pipes/category-cover.pipe';
 import { ImageFallbackDirective } from './directives/image-fallback';
@@ -51,7 +50,6 @@ import { CategoryResolver } from './resolvers/category.resolver';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ProfileCoverPipe } from './pipes/profile-image.pipe';
 import { CategorySelectorComponent } from './components/category-selector/category-selector.component';
-import { SignaturePadComponent } from './components/signature-pad/signature-pad.component';
 import { AppShellAsideView } from './directives/app-shell-aside-view';
 import { AdDirective } from './directives/ad.directive';
 
@@ -75,8 +73,6 @@ import { AdDirective } from './directives/ad.directive';
     ImageFallbackDirective,
     AdDirective,
     AppShellAsideView,
-
-    SignaturePadComponent,
   ],
   imports: [
     CommonModule,
@@ -115,7 +111,6 @@ import { AdDirective } from './directives/ad.directive';
     SkeletonModule,
     SidebarModule,
     ListboxModule,
-    SignaturePadModule,
     ProgressSpinnerModule,
     BadgeModule
   ],
@@ -156,7 +151,6 @@ import { AdDirective } from './directives/ad.directive';
     SkeletonModule,
     SidebarModule,
     ListboxModule,
-    SignaturePadModule,
     ProgressSpinnerModule,
     BadgeModule,
 
@@ -175,8 +169,7 @@ import { AdDirective } from './directives/ad.directive';
     BgCanvasComponent,
     NearLogoComponent,
     SideBarComponent,
-    FileUploadComponent,
-    SignaturePadComponent
+    FileUploadComponent
   ],
   providers: [
     CategoryResolver
