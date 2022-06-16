@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { Certificate } from 'src/app/models/certificate';
 import * as uuid from 'uuid';
 import { Category } from '../models/category';
+import { CertificateData } from '../models/certificate-data';
 import { ContractService } from './certify.contract.service';
 import { Storage } from './storage';
 
@@ -74,6 +76,9 @@ export class CategoryService {
   }
 
   public async updateCategory(category: Category): Promise<any> {
+    if (!category.id) {
+      return;
+    }
     try {
       this.addingCategory.next(true);
       const { raw_image, ...cat } = category;
@@ -83,7 +88,7 @@ export class CategoryService {
         cat.media = `https://${cid}.ipfs.dweb.link/${raw_image.name}`;
       }
 
-      await this.contractService.createCategory(cat);
+      await this.contractService.updateCategory(cat);
 
       setTimeout(() => {
         this.getCategories();
@@ -95,8 +100,29 @@ export class CategoryService {
     }
   }
 
-
   public updateFilter(fitterText: string) {
     this.filterCategoriesSubject.next(fitterText);
   }
+
+    /**
+   * Get user categories
+   * @param metadata metadata object
+   * @returns category
+   */
+     public async getCertificates(categoryId: string): Promise<CertificateData[]> {
+      try {
+        const certificates = await this.contractService.getCertificatesByCategory(categoryId);
+        return certificates.map(ct => ({
+          id: ct.token_id,
+          title: ct.metadata.title,
+          description: ct.metadata.description,
+          media: ct.metadata.media,
+          issued_at: ct.metadata.issued_at,
+          reference: ct.metadata.reference,
+        }));
+      } catch(e) {
+        console.log(e);
+        return [];
+      }
+    }
 }

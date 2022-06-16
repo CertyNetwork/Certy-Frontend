@@ -1,73 +1,85 @@
 import { DOCUMENT } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ThemeService } from './theme.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VouchedService implements OnDestroy {
   private scriptId;
-  private loadedSubject = new BehaviorSubject(false);
-  public loaded$ = this.loadedSubject.asObservable();
+  private statusSubject = new BehaviorSubject('not-ready');
+  public status$ = this.statusSubject.asObservable();
+  vouched: any;
 
   public constructor(
     @Inject(DOCUMENT) private document: Document,
+    private http: HttpClient,
+    private themeService: ThemeService
   ) {
     this.scriptId = +(new Date());
     this.init();
   }
 
-  public startVerification() {
-    const isLoaded = this.loadedSubject.value;
-    if (!isLoaded) {
+  public startVerification(session?: string) {
+    const status = this.statusSubject.value;
+    if (status !== 'ready') {
       return;
     }
-    const vouched = (window as any).Vouched({
+
+    const theme = this.themeService.getCurrentTheme();
+
+    this.vouched = (window as any).Vouched({
       appId: environment.VOUCHED_PUBLIC_KEY,
-      callbackURL: 'https://webhook.site/5cb92794-e8c6-49c9-b670-bd27a86a5b63',
-      verification: {
-        firstName: 'Gladys',
-        lastName: 'West',
-        email: 'test@test.id',
-        phone: '000-111-2222'
-      },
+      callbackURL: `${environment.apiUrl}/webhook/vouched-id`,
+      ...(session ? { token: session } : null),
+      sandbox: environment.VOUCHED_SANDBOX_MODE,
+
+      type: 'idv',
+      id: 'camera',
+      face: 'camera',
       
-      // mobile handoff
+      // mobile handoff settings
       crossDevice: true,
       crossDeviceQRCode: true,
-      crossDeviceSMS: true,
+      crossDeviceSMS: false,
+      disableCssBaseline: true,
+
       onInit: ({token, job}: any) => {
-        console.log('initialization');
+        if (!session && token && job.id) {
+          this.http.post(`${environment.apiUrl}/kyc/verification/start`, {
+            ref: job.id,
+            token,
+          }).pipe(
+            take(1),
+          ).subscribe((res) => {
+          });
+        }
       },
     
       // called when the verification is completed.
       onDone: (job: any) => {
-        // token used to query jobs
-        console.log("Scanning complete", { token: job.token });
-    
-        // An alternative way to update your system based on the 
-        // results of the job. Your backend could perform the following:
-        // 1. query jobs with the token
-        // 2. store relevant job information such as the id and 
-        //    success property into the user's profile
-        fetch(`/yourapi/idv?job_token=${job.token}`);
-    
-    
-        // Redirect to the next page based on the job success
-        if( job.result.success){
-          window.location.replace("https://website.com/success/");
-        }else{
-          window.location.replace("https://website.com/failed/");
-        }
+        this.http.post(`${environment.apiUrl}/kyc/verification/finish`, {
+          jobId: job.id,
+          jobToken: job.token,
+        }).pipe(
+          take(1),
+        ).subscribe((res) => {
+          console.log(res);
+        });
       },
       
       // theme
       theme: {
         name: 'avant',
+        handoffLinkColor: '#2A85FF',
+        bgColor: theme === 'light' ? '##ffffff' : '#1A1D1F',
       },
     });
-    vouched.mount("#vouched_element");
+
+    this.vouched.mount("#vouched_element");
   }
 
   private init() {
@@ -78,19 +90,29 @@ export class VouchedService implements OnDestroy {
     script.async = true;
     script.defer = true;
     script.onload = () => {
-      this.loadedSubject.next(true);
+      this.statusSubject.next('ready');
     }
     script.onerror = () => {
-      this.loadedSubject.next(false);
+      this.statusSubject.next('error');
     };
     this.document.head.appendChild(script);
   }
 
   ngOnDestroy(): void {
+    if (this.vouched) {
+      this.vouched.unmount("#vouched_element");
+    }
+    
     const script = this.document.getElementById(`vouched-${this.scriptId}`);
     if (script) {
       script.remove();
     }
-    this.loadedSubject.unsubscribe();
+    this.statusSubject.unsubscribe();
+  }
+
+  getVerificationStatus() {
+    return this.http.get(`${environment.apiUrl}/kyc/verification/status`).pipe(
+      take(1),
+    );
   }
 }

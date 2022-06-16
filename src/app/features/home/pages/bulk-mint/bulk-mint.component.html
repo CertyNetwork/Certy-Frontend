@@ -1,12 +1,12 @@
 <div class="tw-flex tw-h-full tw-flex-no-wrap tw-overflow-hidden">
   <app-side-bar></app-side-bar>
   <div class="tw-w-full tw-flex tw-flex-col tw-mx-auto tw-pt-10 tw-h-full tw-overflow-y-auto" *ngIf="category$ | async as category">
-    <h1 class="tw-font-bold tw-text-3xl tw-mx-10 tw-mb-5">Bulk Mint: {{category.title}}</h1>
+    <h1 class="tw-font-bold tw-text-3xl tw-mx-10 tw-mb-10">Bulk Mint: {{category.title}}</h1>
     <div class="tw-rounded-md tw-mx-10 shadow-5" style="background-color: var(--surface-card);">
       <div class="tw-flex tw-w-full tw-pt-4 tw-px-5">
         <button *ngIf="step === 'select_file'" pButton icon="pi pi-download" class="tw-w-full md:tw-w-auto md:tw-ml-auto p-button-secondary" [loading]="sampling" label="Download CSV Template" #downloadSampleButton></button>
       </div>
-      <p-panel [showHeader]="false">
+      <p-panel [showHeader]="false" styleClass="tw-border-0">
         <ng-container [ngSwitch]="step">
           <ng-template [ngSwitchCase]="'select_file'">
             <div class="p-fluid">

@@ -41,8 +41,10 @@ import { DragDropModule } from 'primeng/dragdrop';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SidebarModule } from 'primeng/sidebar';
 import { ListboxModule } from 'primeng/listbox';
-import {  BadgeModule } from 'primeng/badge';
+import { BadgeModule } from 'primeng/badge';
+import { GalleriaModule } from 'primeng/galleria';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SignaturePadModule } from 'angular2-signaturepad';
 import { NearLoginComponent } from './components/near-login/near-login.component';
 import { CategoryCoverPipe } from './pipes/category-cover.pipe';
 import { ImageFallbackDirective } from './directives/image-fallback';
@@ -50,8 +52,10 @@ import { CategoryResolver } from './resolvers/category.resolver';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ProfileCoverPipe } from './pipes/profile-image.pipe';
 import { CategorySelectorComponent } from './components/category-selector/category-selector.component';
+import { SignaturePadComponent } from './components/signature-pad/signature-pad.component';
 import { AppShellAsideView } from './directives/app-shell-aside-view';
 import { AdDirective } from './directives/ad.directive';
+import { TitleDirective } from './directives/title.directive';
 
 @NgModule({
   declarations: [
@@ -73,6 +77,9 @@ import { AdDirective } from './directives/ad.directive';
     ImageFallbackDirective,
     AdDirective,
     AppShellAsideView,
+    TitleDirective,
+
+    SignaturePadComponent,
   ],
   imports: [
     CommonModule,
@@ -111,8 +118,10 @@ import { AdDirective } from './directives/ad.directive';
     SkeletonModule,
     SidebarModule,
     ListboxModule,
+    SignaturePadModule,
     ProgressSpinnerModule,
-    BadgeModule
+    BadgeModule,
+    GalleriaModule
   ],
   exports: [
     CommonModule,
@@ -151,8 +160,10 @@ import { AdDirective } from './directives/ad.directive';
     SkeletonModule,
     SidebarModule,
     ListboxModule,
+    SignaturePadModule,
     ProgressSpinnerModule,
     BadgeModule,
+    GalleriaModule,
 
     // Pipes
     CategoryCoverPipe,
@@ -162,6 +173,7 @@ import { AdDirective } from './directives/ad.directive';
     ImageFallbackDirective,
     AdDirective,
     AppShellAsideView,
+    TitleDirective,
 
     // components
     HeaderComponent,
@@ -169,7 +181,8 @@ import { AdDirective } from './directives/ad.directive';
     BgCanvasComponent,
     NearLogoComponent,
     SideBarComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    SignaturePadComponent
   ],
   providers: [
     CategoryResolver

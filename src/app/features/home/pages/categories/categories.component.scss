@@ -3,6 +3,7 @@
   display: block;
   
   .category-list-detail {
+    height: 100%;
     .category-date {
       color: var(--text-color-tertiary-1);
     }
@@ -11,5 +12,15 @@
   .p-dataview-content {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
+  }
+
+  .category-description {
+    color: var(--text-color-tertiary-1);
+  }
+
+  .category-list-item {
+    &:hover {
+      background-color: var(--surface-w);
+    }
   }
 }

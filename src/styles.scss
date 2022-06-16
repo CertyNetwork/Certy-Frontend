@@ -69,6 +69,7 @@ body {
   margin: 0;
   background-color: var(--background-color);
   color: var(--text-color);
+  font-size: 1rem;
 }
 
 /* OVERRIDES */
@@ -163,4 +164,48 @@ ngx-dropzone {
 
 .shadow-neat {
   box-shadow: 0px 4px 8px -4px rgba(0, 0, 0, 0.25), inset 0px -1px 1px rgba(0, 0, 0, 0.04), inset 0px 2px 0px rgba(255, 255, 255, 0.25);
+}
+
+.app-title, .p-dialog-title {
+  position: relative;
+  padding-left: 28px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+
+  &::before {
+    border-radius: 4px;
+    display: flex;
+    flex: 1;
+    content: '';
+    width: 16px;
+    height: 32px;
+    background-color: var(--primary-color);
+    margin-right: 12px;
+    position: absolute;
+    top: auto;
+    bottom: auto;
+    left: 0;
+
+    & + {
+      margin-left: 20px;
+    }
+  }
+}
+
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+  background: transparent;
+  & > td {
+    background-color: var(--surface-w);
+
+    &:first-of-type {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+  }
 }

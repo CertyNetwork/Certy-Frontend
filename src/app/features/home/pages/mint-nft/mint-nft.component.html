@@ -1,10 +1,10 @@
 <div class="tw-flex tw-h-full tw-flex-no-wrap tw-overflow-hidden">
   <app-side-bar></app-side-bar>
   <div class="tw-w-full tw-flex tw-flex-col tw-mx-auto tw-h-full tw-overflow-y-auto" *ngIf="category$ | async as category">
-    <h1 class="tw-font-bold tw-text-3xl tw-mt-10 tw-mx-10 tw-mb-5">Create Certificate: <span [ngStyle]="{color:'var(--primary-color)'}">{{category.title}}</span></h1>
+    <h1 class="tw-font-bold tw-text-3xl tw-mt-10 tw-mx-10 tw-mb-10">Create Certificate: <span [ngStyle]="{color:'var(--primary-color)'}">{{category.title}}</span></h1>
     <form [formGroup]="certForm" class="p-fluid">
       <div class="tw-rounded-md tw-mx-10 tw-p-5 tw-mb-10 shadow-5" style="background-color: var(--surface-card);">
-        <h3 class="tw-text-lg tw-mb-6 tw-pl-2 tw-border-l-8 tw-border-sky-500">Certificate Info</h3>
+        <h3 appTitle class="tw-text-lg tw-mb-6 tw-pl-2">Certificate Info</h3>
         <div class="grid">
           <div class="col-12 lg:col-6">
             <div class="field">
@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="tw-rounded-md tw-mx-10 tw-p-5 tw-mb-10 shadow-5" style="background-color: var(--surface-card);" *ngIf="category.fields && category.fields.length">
-        <h3 class="tw-text-lg tw-mb-6 tw-pl-2 tw-border-l-8 tw-border-sky-500">Additional Info</h3>
+        <h3 appTitle class="tw-text-lg tw-mb-6 tw-pl-2">Additional Info</h3>
         <div class="grid">
           <div class="col-12 lg:col-6">
             <ng-container *ngFor="let field of category.fields">

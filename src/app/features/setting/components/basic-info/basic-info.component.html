@@ -1,4 +1,4 @@
-
+<div appTitle class="tw-text-lg tw-font-semibold tw-mb-8">Profile information</div>
 <div *ngIf="profile$ | async as profile; else loading">
   <div class="tw-mb-8 tw-flex tw-flex-row tw-justify-start tw-items-center" *ngIf="authService.wallet?.getAccountId() | profileCover:shouldReLoad | async as coverImg">
     <div class="tw-relative profile-img">

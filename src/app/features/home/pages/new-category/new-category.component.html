@@ -1,10 +1,10 @@
 <div class="tw-flex tw-h-full tw-flex-no-wrap tw-overflow-hidden">
   <app-side-bar></app-side-bar>
   <div class="tw-w-full tw-flex tw-flex-col tw-mx-auto tw-pt-10 tw-h-full tw-overflow-y-auto" [formGroup]="categoryForm">
-    <h1 class="tw-font-bold tw-text-3xl tw-mx-10 tw-mb-5">Create Category</h1>
+    <h1 class="tw-font-bold tw-text-3xl tw-mx-10 tw-mb-10">Create Category</h1>
     <div class="p-fluid grid tw-rounded-md tw-mx-10 tw-p-5 tw-mb-10 shadow-5" style="background-color: var(--surface-card);" formGroupName="info">
       <div class="col-12">
-        <h3 class="tw-text-lg tw-mb-4 tw-pl-2 tw-border-l-8 tw-border-sky-500">Category Info</h3>
+        <h3 appTitle class="tw-text-lg tw-mb-4 tw-pl-2">Category Info</h3>
       </div>
       <div class="col-12 lg:col-6">
         <div class="field">
@@ -25,7 +25,7 @@
     </div>
     <div class="tw-rounded-md tw-mx-10 tw-p-5 tw-mb-10 shadow-5" style="background-color: var(--surface-card);">
       <div class="col-12">
-        <h3 class="tw-text-lg tw-mb-4 tw-pl-2 tw-border-l-8 tw-border-sky-500">Additional Fields</h3>
+        <h3 appTitle class="tw-text-lg tw-mb-4 tw-pl-2">Additional Fields</h3>
         <div formArrayName="fields">
           <ng-container *ngFor="let fieldForm of fields.controls; let index = index">
             <div [formGroupName]="index" class="p-fluid grid">

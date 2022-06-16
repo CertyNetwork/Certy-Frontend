@@ -4,11 +4,12 @@ import { BehaviorSubject } from 'rxjs';
 import { Contract, utils } from "near-api-js";
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
-import { CertificateData } from '../models/certificate-data';
+import { CertificateContractData, CertificateData } from '../models/certificate-data';
 import { formatResponse, ResponseData } from '../utils/responseBuilder';
 import { Storage } from './storage';
 import { correctFileType } from '../utils/files';
 import { Category } from '../models/category';
+import { Certificate } from 'src/app/models/certificate';
 
 @Injectable({
   providedIn: 'root'
@@ -113,31 +114,39 @@ export class ContractService {
       title: category.title,
       description: category.description,
       media: category.media,
+      fields: JSON.stringify(category.fields),
       updated_at: Date.now(),
     };
+    const callbackUrl = this.document.location.protocol + '//' + document.location.host + `/category/${category.id}`;
     try {
       // @ts-ignore: method does not exist on Contract type
-      let updatedCategory = await this.contract.category_update({
-        category_id: category.id,
-        metadata: metadata,
-      }, '300000000000000', utils.format.parseNearAmount("1"));
-      return updatedCategory;
+      let addedCategory = await this.contract.category_update({
+        callbackUrl,
+        meta: '',
+        args: {
+          category_id: category.id,
+          metadata: metadata,
+        },
+        gas: '300000000000000',
+        amount: utils.format.parseNearAmount("1")
+      });
+      return addedCategory;
     } catch (e) {
       console.log(e);
     }
   }
 
  async getCategory(categoryId: string): Promise<Category | null> {
-  if (!this.contract) {
-    return null;
-  }
-  // @ts-ignore: method does not exist on Contract type
-  let category = await this.contract.category_info({category_id: categoryId}).catch((err: any) => console.log(err));
-  return {
-    id: category.category_id,
-    ...category.metadata,
-    fields: JSON.parse(category.metadata.fields)
-  };
+    if (!this.contract) {
+      return null;
+    }
+    // @ts-ignore: method does not exist on Contract type
+    let category = await this.contract.category_info({category_id: categoryId}).catch((err: any) => console.log(err));
+    return {
+      id: category.category_id,
+      ...category.metadata,
+      fields: JSON.parse(category.metadata.fields)
+    };
  }
   
   async mintCertificate(data: CertificateData, categoryId: string, receiverId: string) {
@@ -229,4 +238,13 @@ export class ContractService {
       return formatResponse({ error: error.message })
     }
   }
+
+  async getCertificatesByCategory(categoryId: string): Promise<CertificateContractData[]> {
+    if (!this.contract) {
+      return [];
+    }
+    // @ts-ignore: method does not exist on Contract type
+    let tokens = await this.contract.cert_get_by_category({category_id: categoryId, limit: 50}).catch((err: any) => console.log(err));
+    return tokens.map((tk: any) => tk as CertificateContractData);
+ }
 }

@@ -1,10 +1,12 @@
 export interface Certificate {
   id: number;
   title: string;
-  name: string;
-  type: string;
-  level: number;
+  description: string;
+  name?: string;
+  type?: string;
+  level?: number;
   imageUrl: string;
+  issued_at: number;
 }
 
 export interface HeroFilter {

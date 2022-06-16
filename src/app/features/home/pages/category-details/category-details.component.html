@@ -1,0 +1,120 @@
+<div class="tw-flex tw-h-full tw-flex-no-wrap tw-overflow-hidden">
+  <app-side-bar></app-side-bar>
+  <div class="tw-w-full tw-flex tw-flex-col tw-mx-auto tw-pt-10 tw-h-full tw-overflow-y-auto" *ngIf="category$ | async as category">
+    <div class="nav-back tw-mx-10 tw-mb-10">
+      <span class="pi pi-arrow-left tw-cursor-pointer" routerLink="/categories"></span>
+      <h1 routerLink="/categories" class="tw-text-xl tw-ml-4 tw-cursor-pointer">Back to Categories</h1>
+    </div>
+    
+    <div class="grid tw-rounded-md tw-mx-10 tw-p-5 tw-mb-10 shadow-5" style="background-color: var(--surface-card);" [formGroup]="categoryForm">
+      <div class="category-img-1 tw-pb-3 tw-hidden lg:tw-block tw-relative col-12 lg:col-3 tw-pr-4">
+        <img *ngIf="!isNewCategoryImage" src="{{category.media}}" imgFallback class="tw-w-full tw-h-48 tw-object-cover tw-min-h-full" style="border-radius: 6px;">
+        <button pButton *ngIf="isEditing && !isNewCategoryImage" class="tw-absolute p-button-secondary p-button-rounded" icon="pi pi-times" (click)="isNewCategoryImage = true"></button>
+        <app-file-upload *ngIf="isNewCategoryImage" style="height: 100%;" accept="image/*,video/*" formControlName="media"></app-file-upload>
+      </div>
+      <div class="col-12 lg:col-9 lg:tw-pl-4">
+        <div class="tw-flex tw-flex-row tw-justify-between tw-items-center">
+          <h3 *ngIf="!isEditing" appTitle class="tw-text-lg tw-font-semibold tw-pl-2">{{category.title}}</h3>
+          <div appTitle class="tw-w-full" *ngIf="isEditing">
+            <input pInputText class="tw-pl-2 tw-w-full tw-text-lg tw-font-semibold" [maxlength]="256" formControlName="title"/>
+          </div>
+          <button *ngIf="!isEditing" pButton class="p-button-sm p-button-outlined p-button-secondary tw-min-w-[136px]" label="Update Info" icon="pi pi-pencil" iconPos="right" (click)="isEditing = true"></button>
+        </div>
+        <div class="category-img tw-mt-6 lg:tw-hidden tw-relative">
+          <img *ngIf="!isNewCategoryImage" src="{{category.media}}" imgFallback class="tw-w-full tw-h-48 tw-object-cover tw-min-h-full" style="border-radius: 6px;">
+          <button pButton *ngIf="isEditing && !isNewCategoryImage" class="tw-absolute p-button-secondary p-button-rounded" icon="pi pi-times" (click)="isNewCategoryImage = true"></button>
+          <app-file-upload *ngIf="isNewCategoryImage" style="height: 100%;" accept="image/*,video/*" formControlName="media"></app-file-upload>
+        </div>
+        <div class="tw-mt-6">
+          <p *ngIf="!isEditing" class="p-text-secondary">{{category.description}}</p>
+          <textarea [maxlength]="256" rows="4" pInputTextarea [autoResize]="true" *ngIf="isEditing" class="tw-pl-2 tw-w-full" formControlName="description"></textarea>
+        </div>
+        
+      </div>
+      <div class="col-12 tw-text-right">
+        <button *ngIf="!isEditing" pButton class="p-button-outlined p-button-secondary" label="Bulk Mint" routerLink="/bulk-create/{{category.id}}"></button>
+        <button *ngIf="!isEditing" pButton class="p-button-info tw-ml-4" label="Mint NFT" routerLink="/create/{{category.id}}"></button>
+        <button *ngIf="isEditing" pButton class="p-button-outlined p-button-secondary" label="Cancel" (click)="isEditing = false"></button>
+        <button *ngIf="isEditing" pButton class="p-button-info tw-ml-4" label="Update" [loading]="categoryService.addingCategory$ | async" [disabled]="categoryForm.pristine || categoryForm.invalid" (click)="confirmAndUpdateCategory()"></button>
+      </div>
+    </div>
+    <div class="tw-rounded-md tw-mx-10 tw-p-5 tw-mb-10 shadow-5" style="background-color: var(--surface-card);" *ngIf="certificates$ | async as certificates">
+      <div class="col-12">
+        <div class="tw-flex tw-flex-col lg:tw-flex-row lg:tw-justify-between lg:tw-items-center">
+          <h3 appTitle class="tw-text-lg tw-font-semibold tw-pl-2">Minted Certificates</h3>
+          <div class="p-input-icon-left tw-mt-4 lg:tw-mt-0 tw-w-full lg:tw-w-auto">
+            <i class="pi pi-search"></i>
+            <input class="tw-w-full" (input)="filterCerts($event)" type="text" pInputText placeholder="Search certificate"/>
+          </div>
+        </div>
+        <p class="tw-mt-5 p-text-secondary">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+      </div>
+      <div class="col-12">
+        <p-dataView #dtCerts [value]="certificates" [rows]="10" filterBy="title,description" [layout]="'list'" styleClass="tw-rounded-md">
+          <ng-template pTemplate="header">
+            <div class="cert-row lg:tw-flex tw-hidden">
+              <div class="tw-flex-[2_1_0%]">Certificate</div>
+              <div class="tw-flex-[2_1_0%]">Description</div>
+              <div class="tw-flex-[0_1_200px] tw-flex tw-justify-end">Actions</div>
+            </div>
+          </ng-template>
+          <ng-template let-cert let-index="rowIndex" pTemplate="listItem">
+            <div class="col-12 tw-flex-auto">
+              <div class="cert-row tw-flex tw-items-center tw-py-3">
+                <div class="cert-detail tw-py-4">
+                  <img (click)="imageClick(index)" src="{{cert.media}}" imgFallback class="tw-object-cover tw-rounded-lg tw-h-32 tw-w-32 lg:tw-h-20 lg:tw-w-20 tw-cursor-pointer" [alt]="cert.title"/>
+                  <div class="tw-ml-4">
+                    <div class="tw-font-bold">{{cert.title}}</div>
+                    <div class="cert-date tw-mt-3">
+                      <i class="pi pi-clock"></i>
+                      <span class="tw-ml-2 tw-font-light">{{cert.issued_at | date:'MMM d, y'}} at {{ cert.issued_at | date:'h:mm a'}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="cert-description tw-hidden lg:tw-flex tw-mt-3">{{cert.description}}</div>
+                <div class="cert-actions tw-ml-auto tw-hidden lg:tw-flex lg:tw-flex-row tw-mt-4 tw-flex-col tw-items-center tw-justify-end">
+                  <button pButton class="p-button-outlined p-button-secondary" label="Revoke"></button>
+                  <div class="tw-w-4 tw-h-4"></div>
+                  <button pButton class="p-button-primary" label="Transfer"></button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-dataView>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-galleria #galleria
+    [(visible)]="galleryVisible"
+    [value]="certImages"
+    [autoPlay]="false"
+    [fullScreen]="true"
+    [responsiveOptions]="galleryOptions.responsiveOptions"
+    [(activeIndex)]="activeIndex"
+    [numVisible]="5"
+    [containerStyle]="{'max-width':'50%', 'display': 'flex', 'height': '100%', 'justify-content': 'center' }"
+    [containerClass]="galleryVisible ? 'custom-galleria fullscreen' : ''"
+    [showThumbnails]="false"
+    [showItemNavigators]="true"
+    [circular]="true"> 
+  <ng-template pTemplate="item" let-item>
+    <img class="tw-max-w-[80%] tw-max-h-[80%]" [src]="item.previewImageSrc"/>
+  </ng-template>
+  <ng-template pTemplate="thumbnail" let-item>
+    <div class="grid grid-nogutter justify-content-center">
+      <img class="tw-w-28 tw-h-28" [src]="item.thumbnailImageSrc" />
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer" let-item>
+    <div class="custom-galleria-footer">
+      <span class="title-container">
+        <span>{{activeIndex + 1}}/{{certImages.length}}</span>
+        <span class="title">{{certImages[activeIndex].title}}</span>
+        <span>{{certImages[activeIndex].alt}}</span>
+      </span>
+      <button type="button" pButton [icon]="'pi pi-window-minimize'" (click)="closeGallery()" class="fullscreen-button"></button>
+    </div>
+  </ng-template>
+</p-galleria>

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NewCategoryComponent } from './new-category.component';
+import { SignaturePadComponent } from './signature-pad.component';
 
-describe('NewCategoryComponent', () => {
-  let component: NewCategoryComponent;
-  let fixture: ComponentFixture<NewCategoryComponent>;
+describe('SignaturePadComponent', () => {
+  let component: SignaturePadComponent;
+  let fixture: ComponentFixture<SignaturePadComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NewCategoryComponent ]
+      declarations: [ SignaturePadComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NewCategoryComponent);
+    fixture = TestBed.createComponent(SignaturePadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

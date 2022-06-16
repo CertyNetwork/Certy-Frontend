@@ -1,14 +1,14 @@
 <div class="tw-flex tw-h-full tw-flex-no-wrap tw-overflow-hidden">
   <app-side-bar></app-side-bar>
   <div class="tw-w-full tw-flex tw-flex-col tw-mx-auto tw-pt-10 tw-h-full tw-overflow-y-auto">
-    <h1 class="tw-font-bold tw-text-3xl tw-mx-10 tw-mb-5">Overview</h1>
+    <h1 class="tw-font-bold tw-text-3xl tw-mx-10 tw-mb-10">Overview</h1>
     <div class="tw-mb-10 tw-mx-10" *ngIf="categories$ | async as categories; else loading">
-      <p-dataView [value]="categories" [rows]="10" filterBy="name" [layout]="layout" styleClass="shadow-5 tw-rounded-md">
+      <p-dataView #dvCategories filterBy="title,description" [value]="categories" [rows]="10" [layout]="layout" styleClass="shadow-5 tw-rounded-md">
         <ng-template pTemplate="header">
           <div class="flex flex-column md:flex-row md:justify-content-between">
             <div class="p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input class="tw-w-full md:tw-w-auto" type="text" pInputText placeholder="Search category" [(ngModel)]="filterText" (ngModelChange)="onFilterChange()"/>
+              <input class="tw-w-full md:tw-w-auto" type="text" pInputText placeholder="Search category" (input)="onFilterChange($event)"/>
             </div>
             <div class="ml-auto tw-mt-3 md:tw-mt-0">
               <button icon="pi pi-list" [ngClass]="{'p-button-primary': layout ==='list', 'p-button-secondary': layout !=='list'}" class="mr-3 p-button-rounded p-button-text p-button-sm" pButton (click)="changeViewLayout('list')"></button>
@@ -18,41 +18,31 @@
         </ng-template>
         <ng-template let-cat pTemplate="listItem">
           <div class="col-12 tw-mx-4 tw-flex-auto">
-            <div class="tw-flex tw-items-center tw-py-2">
-              <img src="{{cat.media}}" imgFallback class="tw-object-cover tw-rounded-lg tw-h-28 tw-w-28" [alt]="cat.title"/>
+            <div class="tw-flex tw-items-center tw-py-2 tw-px-3 tw-cursor-pointer category-list-item" routerLink="/category/{{cat.id}}">
+              <img src="{{cat.media}}" imgFallback class="tw-object-cover tw-rounded-lg tw-h-28 tw-w-28 tw-cursor-pointer" routerLink="/category/{{cat.id}}" [alt]="cat.title"/>
               <div class="category-list-detail tw-mx-6 tw-py-4">
-                <div class="product-name tw-font-bold">{{cat.title}}</div>
-                <div class="product-description tw-mt-3 tw-line-clamp-2">{{cat.description}}</div>
+                <div class="text-xl font-medium tw-font-bold">{{cat.title}}</div>
+                <div class="category-description tw-mt-3 tw-line-clamp-2">{{cat.description}}</div>
                 <div class="category-date tw-mt-6">
                   <span class="tw-font-light">{{cat.issued_at | date:'MMM d, y'}} at {{ cat.issued_at | date:'h:mm a'}}</span>
                 </div>
-              </div>
-              <div class="product-list-action tw-ml-auto tw-flex lg:tw-flex-row tw-mt-4 tw-flex-col tw-items-center">
-                <button pButton routerLink="/bulk-create/{{cat.id}}" class="p-button-outlined" label="Bulk Mint"></button>
-                <div class="tw-w-4 tw-h-4"></div>
-                <button pButton routerLink="/create/{{cat.id}}" class="p-button-primary" label="Mint NFT"></button>
               </div>
             </div>
           </div>
         </ng-template>
         <ng-template let-cat pTemplate="gridItem">
           <div class="col-12 lg:col-6 xl:col-4 p-4">
-            <div class="category-list-detail surface-card shadow-2 border-rounded p-3" style="border-radius: 6px;">
+            <div class="category-list-detail tw-flex tw-flex-col border-rounded p-3 tw-cursor-pointer category-list-item" routerLink="/category/{{cat.id}}" style="border-radius: 6px;">
               <img src="{{cat.media}}" imgFallback class="mb-3 tw-w-full tw-h-48 tw-object-cover" style="border-radius: 6px;">
               <div class="flex justify-content-between align-items-start">
                 <div>
-                  <div class="text-xl font-medium text-900 mb-2 tw-line-clamp-1">{{cat.title}}</div>
-                  <p class="mt-0 mb-3 text-600 tw-line-clamp-2">{{cat.description}}</p>
+                  <div class="text-xl font-medium mb-2 tw-line-clamp-1">{{cat.title}}</div>
+                  <p class="mt-0 mb-3 category-description tw-line-clamp-2">{{cat.description}}</p>
                 </div>
               </div>
-              <div class="category-date tw-mt-3 flex align-items-center">
+              <div class="category-date tw-mt-auto flex align-items-center">
                 <i class="pi pi-clock"></i>
                 <span class="tw-ml-2 tw-font-light">{{cat.issued_at | date:'MMM d, y'}} at {{ cat.issued_at | date:'h:mm a'}}</span>
-              </div>
-              <div class="tw-mt-5 tw-flex tw-flex-row tw-justify-between">
-                <button pButton routerLink="/bulk-create/{{cat.id}}" class="p-button-outlined" label="Bulk Mint"></button>
-                <div class="tw-w-4 tw-h-4"></div>
-                <button pButton routerLink="/create/{{cat.id}}" class="p-button-primary" label="Mint NFT"></button>
               </div>
             </div>
           </div>
@@ -63,8 +53,8 @@
     <ng-template #loading>
       <p-dataView [value]="[null, null, null, null, null]" [rows]="10" [layout]="'grid'">
         <ng-template let-cat pTemplate="gridItem">
-          <div class="col-12 md:col-6 lg:col-4">
-            <div class="product-grid-item card">
+          <div class="col-12 lg:col-6 xl:col-4 p-4">
+            <div class="category-list-detail">
               <div class="custom-skeleton p-4">
                 <p-skeleton width="100%" height="150px"></p-skeleton>
                 <div class="mt-3">

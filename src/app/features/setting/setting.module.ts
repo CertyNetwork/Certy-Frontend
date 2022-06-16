@@ -6,6 +6,8 @@ import { IndexComponent } from './pages/index/index.component';
 import { SettingRoutingModule } from './setting-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CorporateVerificationComponent } from './components/corporate-verification/corporate-verification.component';
+import { ProfileService } from './services/profile.service';
+import { IndividualVerificationComponent } from './components/individual-verification/individual-verification.component';
 
 
 
@@ -14,12 +16,14 @@ import { CorporateVerificationComponent } from './components/corporate-verificat
     BasicInfoComponent,
     KycComponent,
     IndexComponent,
-    CorporateVerificationComponent
+    CorporateVerificationComponent,
+    IndividualVerificationComponent
   ],
   imports: [
     CommonModule,
     SettingRoutingModule,
     SharedModule
-  ]
+  ],
+  providers: [ProfileService]
 })
 export class SettingModule { }

@@ -12,6 +12,7 @@ import { MintNftComponent } from './pages/mint-nft/mint-nft.component';
 import { NewCategoryComponent } from './pages/new-category/new-category.component';
 import { WorkingComponent } from './pages/working/working.component';
 import { CategoriesComponent } from './pages/categories/categories.component';
+import { CategoryDetailsComponent } from './pages/category-details/category-details.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { CategoriesComponent } from './pages/categories/categories.component';
     MintNftComponent,
     NewCategoryComponent,
     WorkingComponent,
+    CategoryDetailsComponent,
   ],
   imports: [
     CommonModule,

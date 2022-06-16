@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -10,12 +10,11 @@ import { AppComponent } from './app.component';
 import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
 import { RecipeItemComponent } from './components/recipe-item/recipe-item.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { DataService } from './services/DataService';
 import { SharedModule } from './shared/shared.module';
 import { CanDeactivateGuard } from './shared/guards/can-deactivate.guard';
 import { AuthenticateGuard } from './shared/guards/authenticate.guard';
 import { THEMES } from './constants/theme';
+import { TokenHttpInterceptor } from './shared/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -28,9 +27,6 @@ import { THEMES } from './constants/theme';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientInMemoryWebApiModule.forRoot(DataService, {
-      delay: 0,
-    }),
     HttpClientModule,
     SharedModule,
   ],
@@ -38,6 +34,11 @@ import { THEMES } from './constants/theme';
     {
       provide: THEMES,
       useValue: ['light', 'dark'],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenHttpInterceptor,
+      multi: true,
     },
     CanDeactivateGuard,
     AuthenticateGuard,

@@ -18,11 +18,7 @@ export class AuthenticateGuard implements CanActivate, CanLoad {
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     const isLoggedIn = this.authService.isLoggedIn();
       if (!isLoggedIn) {
-        this.dialogSvc.open(NearLoginComponent, {
-          header: 'NEAR is here',
-          width: '450px',
-          styleClass: 'tw-rounded-b-md'
-        });
+        this.openLoginDialog();
       }
       return isLoggedIn;
   }
@@ -32,12 +28,16 @@ export class AuthenticateGuard implements CanActivate, CanLoad {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       const isLoggedIn = this.authService.isLoggedIn();
       if (!isLoggedIn) {
-        this.dialogSvc.open(NearLoginComponent, {
-          header: 'NEAR is here',
-          width: '450px',
-        });
+        this.openLoginDialog();
       }
       return isLoggedIn;
   }
   
+  private openLoginDialog() {
+    this.dialogSvc.open(NearLoginComponent, {
+      header: 'NEAR is here',
+      width: '450px',
+      styleClass: 'tw-rounded-b-md',
+    });
+  }
 }

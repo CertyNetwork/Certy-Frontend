@@ -12,6 +12,7 @@ import { MintNftComponent } from './pages/mint-nft/mint-nft.component';
 import { NewCategoryComponent } from './pages/new-category/new-category.component';
 import { WorkingComponent } from './pages/working/working.component';
 import { IndexGuard } from 'src/app/shared/guards/index.guard';
+import { CategoryDetailsComponent } from './pages/category-details/category-details.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent, canActivate: [IndexGuard] },
@@ -44,6 +45,15 @@ const routes: Routes = [
     component: BulkMintComponent,
     canDeactivate: [CanDeactivateGuard],
     canActivate: [AuthenticateGuard, CategoryGuard]
+  },
+  {
+    path: 'category/:categoryId',
+    component: CategoryDetailsComponent,
+    canDeactivate: [CanDeactivateGuard],
+    canActivate: [AuthenticateGuard],
+    resolve: {
+      category: CategoryResolver
+    }
   },
   { path: 'categories', component: CategoriesComponent, canActivate: [AuthenticateGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticateGuard] },

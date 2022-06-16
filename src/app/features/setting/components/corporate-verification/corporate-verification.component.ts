@@ -28,7 +28,6 @@ export class CorporateVerificationComponent implements OnInit {
   }
 
   submitInfo() {
-    this.dialogRef.close(true);
+    this.dialogRef.close(this.infoForm.value);
   }
-
 }

@@ -1,4 +1,11 @@
+export interface CertificateContractData {
+  token_id: string;
+  owner_id: string;
+  metadata: any;
+}
+
 export interface CertificateData {
+  id?: string;
   title: string;
   description: string;
   media: string;

@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { DataView } from 'primeng/dataview';
 import { Subject, takeUntil } from 'rxjs';
 import { CategoryService } from 'src/app/shared/services/category.service';
 
@@ -14,6 +15,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   layout: string = 'grid';
   filterText: string = '';
   destroy$ = new Subject<void>();
+  @ViewChild('dvCategories') dvCategories: DataView | undefined;
 
   constructor(
     private messageService: MessageService,
@@ -46,8 +48,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     this.categoryService.getCategories();
   }
 
-  onFilterChange() {
-    // this.categoryService.updateFilter(this.filterText);
+  onFilterChange(evt: any) {
+    this.dvCategories?.filter((evt.target as HTMLInputElement).value, 'contains');
   }
 
   changeViewLayout(layout: string) {
