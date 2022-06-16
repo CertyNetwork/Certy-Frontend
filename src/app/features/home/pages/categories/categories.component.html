@@ -24,7 +24,8 @@
                 <div class="text-xl font-medium tw-font-bold">{{cat.title}}</div>
                 <div class="category-description tw-mt-3 tw-line-clamp-2">{{cat.description}}</div>
                 <div class="category-date tw-mt-6">
-                  <span class="tw-font-light">{{cat.issued_at | date:'MMM d, y'}} at {{ cat.issued_at | date:'h:mm a'}}</span>
+                  <i class="pi pi-clock"></i>
+                  <span class="tw-ml-2 tw-font-light">{{cat.issued_at | date:'MMM d, y'}} at {{ cat.issued_at | date:'h:mm a'}}</span>
                 </div>
               </div>
             </div>

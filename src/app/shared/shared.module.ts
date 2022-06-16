@@ -56,6 +56,7 @@ import { SignaturePadComponent } from './components/signature-pad/signature-pad.
 import { AppShellAsideView } from './directives/app-shell-aside-view';
 import { AdDirective } from './directives/ad.directive';
 import { TitleDirective } from './directives/title.directive';
+import { NativeElementInjectorDirective } from './directives/form-control-name.directive';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { TitleDirective } from './directives/title.directive';
     AdDirective,
     AppShellAsideView,
     TitleDirective,
+    NativeElementInjectorDirective,
 
     SignaturePadComponent,
   ],
@@ -174,6 +176,7 @@ import { TitleDirective } from './directives/title.directive';
     AdDirective,
     AppShellAsideView,
     TitleDirective,
+    NativeElementInjectorDirective,
 
     // components
     HeaderComponent,

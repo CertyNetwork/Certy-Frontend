@@ -18,7 +18,7 @@
           <div appTitle class="tw-w-full" *ngIf="isEditing">
             <input pInputText class="tw-pl-2 tw-w-full tw-text-lg tw-font-semibold" [maxlength]="256" formControlName="title"/>
           </div>
-          <button *ngIf="!isEditing" pButton class="p-button-sm p-button-outlined p-button-secondary tw-min-w-[136px]" label="Update Info" icon="pi pi-pencil" iconPos="right" (click)="isEditing = true"></button>
+          <button *ngIf="!isEditing" pButton class="p-button-sm p-button-outlined p-button-secondary tw-min-w-[136px]" label="Update Info" icon="pi pi-pencil" iconPos="right" (click)="beginEditCategory($event)"></button>
         </div>
         <div class="category-img tw-mt-6 lg:tw-hidden tw-relative">
           <img *ngIf="!isNewCategoryImage" src="{{category.media}}" imgFallback class="tw-w-full tw-h-48 tw-object-cover tw-min-h-full" style="border-radius: 6px;">
@@ -34,7 +34,7 @@
       <div class="col-12 tw-text-right">
         <button *ngIf="!isEditing" pButton class="p-button-outlined p-button-secondary" label="Bulk Mint" routerLink="/bulk-create/{{category.id}}"></button>
         <button *ngIf="!isEditing" pButton class="p-button-info tw-ml-4" label="Mint NFT" routerLink="/create/{{category.id}}"></button>
-        <button *ngIf="isEditing" pButton class="p-button-outlined p-button-secondary" label="Cancel" (click)="isEditing = false"></button>
+        <button *ngIf="isEditing" pButton class="p-button-outlined p-button-secondary" label="Cancel" (click)="isEditing = false; isNewCategoryImage = false;"></button>
         <button *ngIf="isEditing" pButton class="p-button-info tw-ml-4" label="Update" [loading]="categoryService.addingCategory$ | async" [disabled]="categoryForm.pristine || categoryForm.invalid" (click)="confirmAndUpdateCategory()"></button>
       </div>
     </div>
@@ -47,7 +47,6 @@
             <input class="tw-w-full" (input)="filterCerts($event)" type="text" pInputText placeholder="Search certificate"/>
           </div>
         </div>
-        <p class="tw-mt-5 p-text-secondary">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
       </div>
       <div class="col-12">
         <p-dataView #dtCerts [value]="certificates" [rows]="10" filterBy="title,description" [layout]="'list'" styleClass="tw-rounded-md">

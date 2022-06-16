@@ -99,6 +99,13 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     //
   }
 
+  beginEditCategory(evt: any) {
+    this.isEditing = true;
+    setTimeout(() => {
+      (this.categoryForm.get('title') as any)?.nativeElement.focus();
+    }, 100);
+  }
+
   async onSubmit() {
     if (!this.originCategory || this.categoryForm.invalid) {
       return;

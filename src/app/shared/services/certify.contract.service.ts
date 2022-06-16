@@ -95,6 +95,7 @@ export class ContractService {
         callbackUrl,
         meta: '',
         args: {
+          category_id: category.id,
           metadata: metadata,
         },
         gas: '300000000000000',
