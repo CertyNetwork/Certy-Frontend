@@ -1,6 +1,14 @@
 :host ::ng-deep {
   height: 100%;
   display: block;
+
+  .p-dataview-header {
+    .p-button.p-button-icon-only.p-button-rounded {
+      height: 18px;
+      width: 18px;
+      padding: 14px;
+    }
+  }
   
   .category-list-detail {
     height: 100%;
@@ -21,6 +29,28 @@
   .category-list-item {
     &:hover {
       background-color: var(--surface-w);
+      border-radius: 8px;
+    }
+  }
+
+  .p-dataview.p-dataview-list .p-dataview-content > .p-grid > div {
+    border: none;
+
+    &:first-of-type {
+      margin-top: 8px;
+    }
+
+    &:last-of-type {
+      margin-bottom: 8px;
+    }
+
+    & + div {
+      margin-top: 8px;
+    }
+
+    &:nth-child(even) {
+      background-color: var(--surface-w);
+      border-radius: 8px;
     }
   }
 }

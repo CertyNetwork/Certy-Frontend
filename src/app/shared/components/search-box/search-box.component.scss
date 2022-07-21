@@ -1,0 +1,39 @@
+:host {
+  .search-box {
+    position: relative;
+    min-width: 0px;
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    line-height: 1.6;
+    border-radius: 4px;
+    margin-bottom: 0;
+
+    input {
+      margin: 0px;
+      min-width: 0px;
+      width: 100%;
+      height: 100%;
+      padding: 8px 32px;
+      outline: none;
+      border-radius: 6px;
+      opacity: 1;
+      background-color: var(--input-background);
+      min-height: 2rem;
+    }
+
+    .pi-right {
+      position: absolute;
+      right: 12px;
+      cursor: pointer;
+      color: var(--text-color-secondary);
+    }
+
+    .pi-left {
+      position: absolute;
+      left: 12px;
+      cursor: pointer;
+      color: var(--text-color-secondary);
+    }
+  }
+}

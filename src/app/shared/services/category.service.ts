@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Certificate } from 'src/app/models/certificate';
 import * as uuid from 'uuid';
 import { Category } from '../models/category';
 import { CertificateData } from '../models/certificate-data';
@@ -59,7 +58,10 @@ export class CategoryService {
       cat.id = uuid.v4();
       
       if (raw_image) {
-        const cid = await this.storage.uploadToWeb3Storage([raw_image]);
+        const cid = await this.storage.upload([raw_image], {
+          scene: 'new_category',
+          category_id: cat.id
+        });
         cat.media = `https://${cid}.ipfs.dweb.link/${raw_image.name}`;
       }
 
@@ -84,7 +86,10 @@ export class CategoryService {
       const { raw_image, ...cat } = category;
       
       if (raw_image) {
-        const cid = await this.storage.uploadToWeb3Storage([raw_image]);
+        const cid = await this.storage.upload([raw_image], {
+          scene: 'update_category',
+          category_id: cat.id || ''
+        });
         cat.media = `https://${cid}.ipfs.dweb.link/${raw_image.name}`;
       }
 

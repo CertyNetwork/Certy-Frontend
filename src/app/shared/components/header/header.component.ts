@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   account$ = this.authSvc.account$;
   profile$ = this.account$.pipe(
     filter(acc => !!acc),
-    tap(() => this.userService.getUserProfile()),
+    // tap(() => this.userService.getUserProfile()),
     switchMap(() => this.userService.profile$)
   );
   accountMenuItems: MenuItem[] = [

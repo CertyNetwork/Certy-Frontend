@@ -169,7 +169,10 @@ export class BulkMintComponent implements OnInit {
     const receiverIds = validCerts.map(dt => dt.walletId);
 
     try {
-      const cid = await this.storage.uploadToWeb3Storage(files);
+      const cid = await this.storage.upload(files, {
+        scene: 'bulk_cert_mint',
+        category_id: category.id || ''
+      });
     
       const metaDatas = validCerts.map(dt => {
         const reference: any = {};
@@ -196,7 +199,7 @@ export class BulkMintComponent implements OnInit {
     }
   }
 
-  @ViewChild('downloadSampleButton') set manageBankButton(content: ElementRef) {
+  @ViewChild('downloadSampleButton') set downloadSampleButton(content: ElementRef) {
     if (content) {
       this.subs.add(fromEvent(content.nativeElement, 'click').pipe(
         tap(() => {

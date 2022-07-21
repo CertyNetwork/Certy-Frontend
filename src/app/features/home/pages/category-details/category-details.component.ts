@@ -26,7 +26,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
   isEditing = false;
   isNewCategoryImage = false;
   @ViewChild('dtCerts') dtCerts: DataView | undefined;
-  @ViewChild('galleria') galleria: Galleria | undefined;
+  @ViewChild('galleria') galleria: Galleria;
   galleryVisible = false;
   activeIndex = 0;
   galleryOptions = {
@@ -80,14 +80,6 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
         }));
       })
     );
-    // this.certImages$ = this.certificates$.pipe(
-    //   map((certificates) => certificates.map(ct => ({
-    //     previewImageSrc: ct.media,
-    //     thumbnailImageSrc: ct.media,
-    //     alt: ct.description,
-    //     title: ct.title
-    //   }))),
-    // );
   }
 
   ngOnDestroy(): void {
@@ -128,19 +120,25 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  filterCerts(evt: any) {
-    this.dtCerts?.filter((evt.target as HTMLInputElement).value, 'contains');
+  filterCerts(query: string) {
+    this.dtCerts?.filter(query, 'contains');
   }
 
   confirmAndUpdateCategory() {
     this.confirmationService.confirm({
-      message: 'An applicable fee will be charged when updating the category. Do you want to proceed?',
+      message: `An applicable fee will be charged when updating the category.
+      <br>
+      <p class="tw-mt-3">Do you want to proceed?</p>`,
       accept: () => {
         this.onSubmit();
       },
       reject: () => {
         this.isEditing = false;
         this.isNewCategoryImage = false;
+        this.categoryForm.reset({
+          ...this.originCategory,
+          media: null
+        })
       },
       acceptButtonStyleClass: 'p-button-info',
       rejectButtonStyleClass: 'p-button-secondary mr-5'
@@ -150,19 +148,6 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
   imageClick(index: number) {
     this.activeIndex = index;
     this.galleryVisible = true;
-    let elem = this.galleria?.element.nativeElement.querySelector(".p-galleria");
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    }
-    else if (elem['mozRequestFullScreen']) { /* Firefox */
-      elem['mozRequestFullScreen']();
-    }
-    else if (elem['webkitRequestFullscreen']) { /* Chrome, Safari & Opera */
-      elem['webkitRequestFullscreen']();
-    }
-    else if (elem['msRequestFullscreen']) { /* IE/Edge */
-      elem['msRequestFullscreen']();
-    }
   }
 
   closeGallery() {

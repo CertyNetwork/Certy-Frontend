@@ -3,7 +3,7 @@ import { BehaviorSubject, filter, from, map, mergeMap, Observable, of, switchMap
 import { connect, keyStores, WalletConnection, ConnectConfig, utils, providers } from "near-api-js";
 import { environment } from 'src/environments/environment';
 import { AccountView } from 'near-api-js/lib/providers/provider';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CookieService } from './cookie.service';
 
 @Injectable({

@@ -1,16 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FirebaseApp, initializeApp, getApp } from 'firebase/app';
-import { FirebaseStorage, ref, uploadBytes, getStorage } from 'firebase/storage';
-import { v4 as uuidv4 } from 'uuid';
-import Arweave from 'arweave';
+import { HttpClient } from '@angular/common/http';
 import { Web3Storage } from 'web3.storage';
-import { formatResponse, ResponseData } from '../utils/responseBuilder';
-import { retryFetch } from '../utils/retryFetch';
-import arweaveKey from '../../../environments/arware.json';
 import { environment } from 'src/environments/environment';
+import { lastValueFrom } from 'rxjs';
 
-const CLOUD_URI = '';
-const ARWEAVE_FOLDER = 'arweave';
 const headers = {
   apiKey: 'api-key',
 };
@@ -38,98 +31,13 @@ export const ERROR_MESSAGES = {
   providedIn: 'root'
 })
 export class Storage {
-  public firebase: FirebaseApp | undefined;
-  public storage: FirebaseStorage | undefined;
   public apiKey: string = '';
-  arweave = Arweave.init({
-    host: 'arweave.net',
-    port: 443,
-    protocol: 'https'
-  });
   web3Storage = new Web3Storage({ token: environment.WEB3STORAGE_TOKEN });
 
-  constructor() {
-    let certifyFirebase;
-    try {
-      certifyFirebase = getApp('certify-web');
-    } catch(e) {
-      //
-    }
-
-    this.firebase = certifyFirebase ?? initializeApp(environment.firebaseConfig, 'certify-web');
-
-    this.storage = getStorage(this.firebase);
-  }
-
-  /**
-   * Uploads metadata to Arweave via a cloud function
-   * @param metadata metadata object
-   * @returns arweave content identifier
-   */
-   public async uploadMetadata(
-    metadata: unknown
-  ): Promise<ResponseData<{ id: string }>> {
-    try {
-      const request = await retryFetch(`${CLOUD_URI}/arweave/metadata/`, {
-        method: 'POST',
-        body: JSON.stringify(metadata),
-        headers: {
-          [headers.apiKey]: this.apiKey || 'anonymous',
-          'Access-Control-Allow-Origin': '*',
-          'Content-type': 'text/plain',
-        },
-      });
-
-      const data: { id: string } = await request.json();
-
-      return formatResponse({ data });
-    } catch (error) {
-      return formatResponse({ error: ERROR_MESSAGES.uploadMetadata });
-    }
-  }
-
-  /**
-   * Upload file to Arweave
-   * @param file the file to upload
-   * @returns returns an object containing the arweave content identifier and the content type.
-   */
-  public async uploadToArweave(file: File): Promise<ResponseData<{ id: string; contentType: string }>> {
-    const buffer = await file.arrayBuffer();
-    const contentType = file.type;
-
-    try {
-      try {
-        const jwk = {
-          d: arweaveKey.d,
-          p: arweaveKey.p,
-          q: arweaveKey.q,
-          dp: arweaveKey.dp,
-          dq: arweaveKey.dq,
-          qi: arweaveKey.qi,
-          kty: arweaveKey.kty,
-          e: arweaveKey.e,
-          n: arweaveKey.n,
-        };
-        const transaction = await this.arweave.createTransaction({
-          data: buffer
-        }, jwk);
-        transaction.addTag('Content-Type', contentType);
-
-        await this.arweave.transactions.sign(transaction, jwk);
-        
-        const result = await this.arweave.transactions.post(transaction);
-        
-        console.log(result);
-
-        return formatResponse({ data: { id: transaction.id, contentType } });
-      } catch (error) {
-        return formatResponse({
-          error: ERROR_MESSAGES.decentralizedStorageFailed,
-        });
-      }
-    } catch (error: any) {
-      return formatResponse({ error: error.message });
-    }
+  constructor(
+    private http: HttpClient
+  ) {
+   
   }
 
   /**
@@ -147,27 +55,30 @@ export class Storage {
   }
 
   /**
-   * Uploads raw binary data to the cloud. We can trigger an arweave upload via an http request with the returned file name.
-   * @param buffer the raw binary data of the file to upload
-   * @param contentType the content type
-   * @returns the filename
+   * Upload file to server
+   * @param files the files to upload
+   * @returns returns an rootCid string
    */
-  private async uploadCloud(
-    buffer: ArrayBuffer | Buffer,
-    contentType: string
-  ): Promise<ResponseData<string>> {
+   public async upload(files: File[], metaData?: {[key: string]: string}): Promise<string> {
     try {
-      const fileName = uuidv4();
+      var formData = new FormData();
+      // Append files to the virtual form.
+      for (const file of files) {
+        formData.append('files', file);
+      }
 
-      if (!this.storage)
-        return formatResponse({ error: 'Storage is not initialized' });
-
-      const storageRef = ref(this.storage, `${ARWEAVE_FOLDER}/${fileName}`);
-      await uploadBytes(storageRef, buffer, { contentType: contentType });
-
-      return formatResponse({ data: fileName });
-    } catch (error) {
-      return formatResponse({ error: ERROR_MESSAGES.uploadCloud });
+      if (metaData) {
+        for (var key in metaData) {
+          if (metaData.hasOwnProperty(key)) {
+            formData.append(key, metaData[key]);
+          }
+        }
+      }
+      
+      const { data: {rootCid} } = await lastValueFrom(this.http.post<any>(`${environment.apiUrl}/web3-storage/put-files`, formData));
+      return rootCid;
+    } catch (error: any) {
+      throw new Error('Error while upload media.')
     }
   }
 }

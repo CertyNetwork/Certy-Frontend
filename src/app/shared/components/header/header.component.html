@@ -48,7 +48,7 @@
             size="large"
             shape="circle">
           </p-avatar>
-          <p class="tw-ml-3 tw-font-semibold md:tw-hidden" style="color: var(--text-color);" *ngIf="profile$ | async as profile">{{profile.display_name}}</p>
+          <p class="tw-ml-3 tw-font-semibold md:tw-hidden" style="color: var(--text-color);" *ngIf="profile$ | async as profile">{{profile.info.displayName}}</p>
           <span class="pi tw-ml-auto md:tw-hidden" [ngClass]="{'pi-chevron-down': !accountMenu.visible, 'pi-chevron-up': accountMenu.visible}"></span>
           <p-menu #accountMenu [appendTo]="'body'" [popup]="true" [model]="accountMenuItems"></p-menu>
         </div>

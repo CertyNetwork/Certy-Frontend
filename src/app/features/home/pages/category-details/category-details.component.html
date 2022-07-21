@@ -14,9 +14,9 @@
       </div>
       <div class="col-12 lg:col-9 lg:tw-pl-4">
         <div class="tw-flex tw-flex-row tw-justify-between tw-items-center">
-          <h3 *ngIf="!isEditing" appTitle class="tw-text-lg tw-font-semibold tw-pl-2">{{category.title}}</h3>
+          <h3 *ngIf="!isEditing" appTitle class="tw-text-lg tw-font-semibold">{{category.title}}</h3>
           <div appTitle class="tw-w-full" *ngIf="isEditing">
-            <input pInputText class="tw-pl-2 tw-w-full tw-text-lg tw-font-semibold" [maxlength]="256" formControlName="title"/>
+            <input pInputText class="tw-w-full tw-text-lg tw-font-semibold" [maxlength]="256" formControlName="title"/>
           </div>
           <button *ngIf="!isEditing" pButton class="p-button-sm p-button-outlined p-button-secondary tw-min-w-[136px]" label="Update Info" icon="pi pi-pencil" iconPos="right" (click)="beginEditCategory($event)"></button>
         </div>
@@ -27,11 +27,11 @@
         </div>
         <div class="tw-mt-6">
           <p *ngIf="!isEditing" class="p-text-secondary">{{category.description}}</p>
-          <textarea [maxlength]="256" rows="4" pInputTextarea [autoResize]="true" *ngIf="isEditing" class="tw-pl-2 tw-w-full" formControlName="description"></textarea>
+          <textarea [maxlength]="256" rows="4" pInputTextarea [autoResize]="true" *ngIf="isEditing" class="tw-w-full p-text-secondary" formControlName="description"></textarea>
         </div>
         
       </div>
-      <div class="col-12 tw-text-right">
+      <div class="col-12 tw-text-right tw-mt-4 lg:mt-0">
         <button *ngIf="!isEditing" pButton class="p-button-outlined p-button-secondary" label="Bulk Mint" routerLink="/bulk-create/{{category.id}}"></button>
         <button *ngIf="!isEditing" pButton class="p-button-info tw-ml-4" label="Mint NFT" routerLink="/create/{{category.id}}"></button>
         <button *ngIf="isEditing" pButton class="p-button-outlined p-button-secondary" label="Cancel" (click)="isEditing = false; isNewCategoryImage = false;"></button>
@@ -42,10 +42,7 @@
       <div class="col-12">
         <div class="tw-flex tw-flex-col lg:tw-flex-row lg:tw-justify-between lg:tw-items-center">
           <h3 appTitle class="tw-text-lg tw-font-semibold tw-pl-2">Minted Certificates</h3>
-          <div class="p-input-icon-left tw-mt-4 lg:tw-mt-0 tw-w-full lg:tw-w-auto">
-            <i class="pi pi-search"></i>
-            <input class="tw-w-full" (input)="filterCerts($event)" type="text" pInputText placeholder="Search certificate"/>
-          </div>
+          <app-search-box placeholder="Search certificate" class="tw-mt-4 lg:tw-mt-0" (onSearch)="filterCerts($event)"></app-search-box>
         </div>
       </div>
       <div class="col-12">

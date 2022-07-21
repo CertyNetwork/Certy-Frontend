@@ -57,6 +57,7 @@ import { AppShellAsideView } from './directives/app-shell-aside-view';
 import { AdDirective } from './directives/ad.directive';
 import { TitleDirective } from './directives/title.directive';
 import { NativeElementInjectorDirective } from './directives/form-control-name.directive';
+import { SearchBoxComponent } from './components/search-box/search-box.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { NativeElementInjectorDirective } from './directives/form-control-name.d
     NativeElementInjectorDirective,
 
     SignaturePadComponent,
+    SearchBoxComponent,
   ],
   imports: [
     CommonModule,
@@ -185,7 +187,8 @@ import { NativeElementInjectorDirective } from './directives/form-control-name.d
     NearLogoComponent,
     SideBarComponent,
     FileUploadComponent,
-    SignaturePadComponent
+    SignaturePadComponent,
+    SearchBoxComponent
   ],
   providers: [
     CategoryResolver

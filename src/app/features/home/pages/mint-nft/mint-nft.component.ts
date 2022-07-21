@@ -58,9 +58,6 @@ export class MintNftComponent implements OnInit, OnDestroy {
         this.additionalFields.push(fd);
       });
     });
-    this.contractSvc.getOwnCerts().then(tokens => {
-      console.log(tokens);
-    })
   }
 
   async onSubmit() {
@@ -84,7 +81,11 @@ export class MintNftComponent implements OnInit, OnDestroy {
     this.isMinting = true;
 
     try {
-      const cid = await this.storage.uploadToWeb3Storage(mediaFiles);
+      const cid = await this.storage.upload(mediaFiles, {
+        scene: 'cert_mint',
+        category_id: this.categoryId,
+        wallet_id: data['walletId']
+      });
       const certData: CertificateData = {
         title: data['title'],
         description: data['description'],
@@ -103,7 +104,7 @@ export class MintNftComponent implements OnInit, OnDestroy {
           }
         }
         const referenceFiles = this.makeFileObjects(reference);
-        const refCid = await this.storage.uploadToWeb3Storage(referenceFiles);
+        const refCid = await this.storage.upload(referenceFiles);
         certData.reference = `https://${refCid}.ipfs.dweb.link/reference.json`;
       }
   
@@ -115,7 +116,7 @@ export class MintNftComponent implements OnInit, OnDestroy {
     }
   }
 
-  makeFileObjects (obj: Object) {
+  makeFileObjects(obj: Object) {
     // You can create File objects from a Blob of binary data
     // see: https://developer.mozilla.org/en-US/docs/Web/API/Blob
     // Here we're just storing a JSON object, but you can store images,

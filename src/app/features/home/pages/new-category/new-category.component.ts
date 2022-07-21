@@ -115,9 +115,16 @@ export class NewCategoryComponent implements OnInit, OnDestroy {
       })),
     };
     const categoryId = await this.categoryService.addCategory(newCategory);
-    this.messageService.add({
-      severity: 'success',
-      summary: `New category has been added: ${categoryId}`,
-    });
+    if (categoryId) {
+      this.messageService.add({
+        severity: 'success',
+        summary: `New category has been added: ${categoryId}`,
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: `Error while creating category.`,
+      });
+    }
   }
 }

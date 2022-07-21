@@ -12,11 +12,17 @@ import { UserService } from 'src/app/shared/services/user.service';
   styleUrls: ['./basic-info.component.scss'],
 })
 export class BasicInfoComponent implements OnInit, OnDestroy {
+  userType: string;
   profileForm: FormGroup;
+  profileOrganizationForm: FormGroup;
   files: File[] = [];
   subs = new Subscription();
   profile$ = this.userService.profile$;
   shouldReLoad = false;
+  companyTypeOptions = [
+    { label: 'Product', value: 'product' },
+    { label: 'OutSource', value: 'outsource' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -25,13 +31,22 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
     private messageService: MessageService
   ) {
     this.profileForm = this.fb.group({
-      display_name: [null, [Validators.required]],
+      displayName: [null, [Validators.required]],
       email: [null, [Validators.required, Validators.email]],
       location: [null, [Validators.required]],
       bio: [null, [Validators.required]],
       // signature: [null],
-      linkedin_link: [null],
-      github: [null]
+      linkedInLink: [null],
+      githubLink: [null]
+    });
+    this.profileOrganizationForm = this.fb.group({
+      companyName: [null, [Validators.required]],
+      email: [null, [Validators.required, Validators.email]],
+      location: [null, [Validators.required]],
+      organizationType: [null, [Validators.required]],
+      // signature: [null],
+      workingHours: [null],
+      organizationSize: [null]
     });
   }
 
@@ -43,11 +58,14 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
     this.subs.add(this.profile$.pipe(
       
     ).subscribe((profile => {
-      if (profile) {
-        this.profileForm.patchValue(profile);
+      this.userType = profile.userType;
+      if (profile && profile.userType === 'individual') {
+        this.profileForm.patchValue(profile.info);
+      }
+      if (profile && profile.userType === 'institution') {
+        this.profileOrganizationForm.patchValue(profile.info);
       }
     })));
-    this.userService.getUserProfile();
   }
 
   onSelect(event: any) {
@@ -59,15 +77,16 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
   }
 
   updateProfile() {
-    if (this.profileForm.invalid) {
+    if ((this.userType === 'individual' && this.profileForm.invalid) || (this.userType === 'institution ' && this.profileOrganizationForm.invalid)) {
       return;
     }
-    this.userService.updateUserProfile(this.profileForm.value).then(() => {
+    const payload = this.userType === 'individual' ? this.profileForm.value : this.profileOrganizationForm.value;
+    this.userService.updateUserProfile(this.userType, payload).then(() => {
       this.messageService.add({
         severity: 'success',
         summary: `Profile has been updated successfully`,
       });
-    })
+    });
   }
 
   async uploadAvatar(event: any, uploader: FileUpload) {
@@ -83,7 +102,7 @@ export class BasicInfoComponent implements OnInit, OnDestroy {
   }
 
   async removeAvatar() {
-    await this.userService.removeAvatarImage();
-    this.shouldReLoad = !this.shouldReLoad;
+    // await this.userService.removeAvatarImage();
+    // this.shouldReLoad = !this.shouldReLoad;
   }
 }

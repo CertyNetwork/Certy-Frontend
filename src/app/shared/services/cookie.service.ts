@@ -2,8 +2,6 @@ import { PlatformService } from './platform.service';
 import { Injectable, Injector } from '@angular/core';
 import { CookieAttributes } from 'js-cookie';
 import Cookies from 'js-cookie';
-import * as express from 'express';
-// import { REQUEST } from '@nguniversal/express-engine/tokens';
 import { environment } from '../../../environments/environment';
 
 export interface ICookieService {

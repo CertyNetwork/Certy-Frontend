@@ -48,8 +48,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     this.categoryService.getCategories();
   }
 
-  onFilterChange(evt: any) {
-    this.dvCategories?.filter((evt.target as HTMLInputElement).value, 'contains');
+  onFilterChange(query: string) {
+    this.dvCategories?.filter(query, 'contains');
   }
 
   changeViewLayout(layout: string) {

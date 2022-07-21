@@ -71,7 +71,7 @@
       </div>
       <div class="tw-flex tw-justify-between tw-mt-5">
         <button pButton class="p-button-text tw-mt-4" icon="pi pi-chevron-left" style="width: auto" label="Back" (click)="step = 'info'"></button>
-        <button pButton class="p-button-primary tw-mt-4" [disabled]="fields.status === 'INVALID'" [loading]="categoryService.addingCategory$ | async" style="width: auto" label="Done" (click)="onSubmit()"></button>
+        <button pButton class="p-button-primary tw-mt-4" [disabled]="fields.status === 'INVALID'" [loading]="!!(categoryService.addingCategory$ | async)" style="width: auto" label="Done" (click)="onSubmit()"></button>
       </div>
     </ng-template>
   </ng-container>

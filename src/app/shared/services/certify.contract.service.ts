@@ -5,11 +5,8 @@ import { Contract, utils } from "near-api-js";
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { CertificateContractData, CertificateData } from '../models/certificate-data';
-import { formatResponse, ResponseData } from '../utils/responseBuilder';
 import { Storage } from './storage';
-import { correctFileType } from '../utils/files';
 import { Category } from '../models/category';
-import { Certificate } from 'src/app/models/certificate';
 
 @Injectable({
   providedIn: 'root'
@@ -202,42 +199,6 @@ export class ContractService {
     return tokens.map((tk: any) => ({
       ...tk
     }));
-  }
-
-  /**
-   * Uploads file and returns corresponding URI.
-   * @param file The file to upload.
-   */
-   public async upload(
-    file: File
-  ): Promise<ResponseData<{ uri: string; hash: string }>> {
-    try {
-      if (!this.storage) {
-        return formatResponse({ error: 'Storage not initialized' });
-      }
-
-      // corrects MIME type.
-      const tFile = await correctFileType(file);
-
-      if (tFile.size > this.FILE_UPLOAD_SIZE_LIMIT) {
-        formatResponse({ error: 'File size is too big' })
-      }
-
-      const { data: result, error } = await this.storage.uploadToArweave(file);
-
-      if (!result || error) return formatResponse({ error });
-
-      const data = {
-        uri: `${environment.BASE_ARWEAVE_URI}/${
-          result?.id
-        }`,
-        hash: result?.id,
-      }
-
-      return formatResponse({ data })
-    } catch (error: any) {
-      return formatResponse({ error: error.message })
-    }
   }
 
   async getCertificatesByCategory(categoryId: string): Promise<CertificateContractData[]> {

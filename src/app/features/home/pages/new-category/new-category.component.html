@@ -80,10 +80,10 @@
         </div>
       </div>
     </div>
-    <div class="tw-sticky tw-mt-auto tw-bottom-0 tw-w-full tw-px-10 tw-py-3 tw-flex tw-items-center tw-justify-between" style="background-color: var(--surface-card);">
+    <div class="tw-sticky tw-shadow-[0px_0px_1px_0px_var(--surface-ground)] tw-mt-auto tw-bottom-0 tw-w-full tw-px-10 tw-py-3 tw-flex tw-items-center tw-justify-between" style="background-color: var(--surface-card);">
       <p *ngIf="fields && fields.length" class="p-text-secondary">{{fields.length.toString().padStart(2,'0')}} field(s) added</p>
       <p *ngIf="!fields || !fields.length" class="p-text-secondary">No field added</p>
-      <button pButton class="p-button-outlined" [disabled]="info.invalid || fields.status === 'INVALID'" [loading]="categoryService.addingCategory$ | async" style="width: auto" label="Done" (click)="onSubmit()"></button>
+      <button pButton class="p-button-outlined" [disabled]="info.invalid || fields.status === 'INVALID'" [loading]="!!(categoryService.addingCategory$ | async)" style="width: auto" label="Done" (click)="onSubmit()"></button>
     </div>
   </div>
 </div>

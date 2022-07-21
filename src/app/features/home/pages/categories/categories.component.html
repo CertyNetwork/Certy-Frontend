@@ -5,11 +5,9 @@
     <div class="tw-mb-10 tw-mx-10" *ngIf="categories$ | async as categories; else loading">
       <p-dataView #dvCategories filterBy="title,description" [value]="categories" [rows]="10" [layout]="layout" styleClass="shadow-5 tw-rounded-md">
         <ng-template pTemplate="header">
-          <div class="flex flex-column md:flex-row md:justify-content-between">
-            <div class="p-input-icon-left">
-              <i class="pi pi-search"></i>
-              <input class="tw-w-full md:tw-w-auto" type="text" pInputText placeholder="Search category" (input)="onFilterChange($event)"/>
-            </div>
+          <div class="flex flex-column md:flex-row md:justify-content-between md:tw-items-center">
+            <h3 appTitle class="tw-text-lg tw-font-semibold tw-pl-2">Categories</h3>
+            <app-search-box placeholder="Search category" class="md:tw-mx-6 tw-mt-4 md:tw-mt-0" (onSearch)="onFilterChange($event)"></app-search-box>
             <div class="ml-auto tw-mt-3 md:tw-mt-0">
               <button icon="pi pi-list" [ngClass]="{'p-button-primary': layout ==='list', 'p-button-secondary': layout !=='list'}" class="mr-3 p-button-rounded p-button-text p-button-sm" pButton (click)="changeViewLayout('list')"></button>
               <button icon="pi pi-th-large" [ngClass]="{'p-button-primary': layout ==='grid', 'p-button-secondary': layout !=='grid'}" class="p-button-rounded p-button-text p-button-sm" pButton (click)="changeViewLayout('grid')"></button>
@@ -17,13 +15,13 @@
           </div>
         </ng-template>
         <ng-template let-cat pTemplate="listItem">
-          <div class="col-12 tw-mx-4 tw-flex-auto">
-            <div class="tw-flex tw-items-center tw-py-2 tw-px-3 tw-cursor-pointer category-list-item" routerLink="/category/{{cat.id}}">
+          <div class="col-12 tw-mx-4 tw-flex-auto category-list-item">
+            <div class="tw-flex tw-items-center tw-p-3 tw-cursor-pointer" routerLink="/category/{{cat.id}}">
               <img src="{{cat.media}}" imgFallback class="tw-object-cover tw-rounded-lg tw-h-28 tw-w-28 tw-cursor-pointer" routerLink="/category/{{cat.id}}" [alt]="cat.title"/>
-              <div class="category-list-detail tw-mx-6 tw-py-4">
+              <div class="category-list-detail tw-mx-6 tw-py-2">
                 <div class="text-xl font-medium tw-font-bold">{{cat.title}}</div>
                 <div class="category-description tw-mt-3 tw-line-clamp-2">{{cat.description}}</div>
-                <div class="category-date tw-mt-6">
+                <div class="category-date tw-mt-3">
                   <i class="pi pi-clock"></i>
                   <span class="tw-ml-2 tw-font-light">{{cat.issued_at | date:'MMM d, y'}} at {{ cat.issued_at | date:'h:mm a'}}</span>
                 </div>
@@ -32,7 +30,7 @@
           </div>
         </ng-template>
         <ng-template let-cat pTemplate="gridItem">
-          <div class="col-12 lg:col-6 xl:col-4 p-4">
+          <div class="col-12 lg:col-6 xl:col-3 p-4">
             <div class="category-list-detail tw-flex tw-flex-col border-rounded p-3 tw-cursor-pointer category-list-item" routerLink="/category/{{cat.id}}" style="border-radius: 6px;">
               <img src="{{cat.media}}" imgFallback class="mb-3 tw-w-full tw-h-48 tw-object-cover" style="border-radius: 6px;">
               <div class="flex justify-content-between align-items-start">

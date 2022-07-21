@@ -6,7 +6,7 @@
         size="xlarge"
         shape="circle">
       </p-avatar>
-      <button pButton *ngIf="coverImg !== '/assets/images/empty.jpeg'" class="tw-absolute p-button-secondary p-button-rounded" icon="pi pi-times" (click)="removeAvatar()"></button>
+      <!-- <button pButton *ngIf="coverImg !== '/assets/images/empty.jpeg'" class="tw-absolute p-button-secondary p-button-rounded" icon="pi pi-times" (click)="removeAvatar()"></button> -->
     </div>
     
     <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Upload new picture"
@@ -18,10 +18,10 @@
       #avatarUploader
       styleClass="tw-text-sm tw-ml-3" chooseLabel="Upload new picture" class="inline-block"></p-fileUpload>
   </div>
-  <form class="p-fluid" [formGroup]="profileForm">
+  <form class="p-fluid" [formGroup]="profileForm" *ngIf="profile.userType === 'individual'">
     <div class="field">
       <label class="" for="name">Display Name</label>
-      <input type="text" id="name" formControlName="display_name" pInputText>
+      <input type="text" id="name" formControlName="displayName" pInputText>
     </div>
     <div class="field">
       <label class="" for="email">Email</label>
@@ -41,14 +41,49 @@
     </div> -->
     <div class="field">
       <label class="" for="linkedin_link">LinkedIn Link</label>
-      <input type="text" id="linkedin_link" placeholder="https://" formControlName="linkedin_link" pInputText>
+      <input type="text" id="linkedin_link" placeholder="https://" formControlName="linkedInLink" pInputText>
     </div>
     <div class="field">
       <label class="" for="github">Github</label>
-      <input type="text" id="github" placeholder="https://" formControlName="github" pInputText>
+      <input type="text" id="github" placeholder="https://" formControlName="githubLink" pInputText>
     </div>
     <div *appShellAsideView class="tw-sticky tw-mt-auto tw-bottom-0 tw-w-full tw-px-10 tw-py-3 tw-flex tw-items-center tw-justify-end" style="background-color: var(--surface-card);">
-      <button [loading]="userService.updatingProfile$ | async" [disabled]="profileForm.invalid" pButton label="Save" style="max-width: 8rem" (click)="updateProfile()"></button>
+      <button [loading]="!!(userService.updatingProfile$ | async)" [disabled]="profileForm.invalid" pButton label="Save" style="max-width: 8rem" (click)="updateProfile()"></button>
+    </div>
+  </form>
+  <form class="p-fluid" [formGroup]="profileOrganizationForm" *ngIf="profile.userType === 'institution'">
+    <div class="field">
+      <label class="" for="name">Company Name</label>
+      <input type="text" id="name" formControlName="companyName" pInputText>
+    </div>
+    <div class="field">
+      <label class="" for="email">Email</label>
+      <input type="text" id="email" formControlName="email" pInputText>
+    </div>
+    <div class="field">
+      <label class="" for="location">Location</label>
+      <input type="text" id="location" formControlName="location" pInputText>
+    </div>
+    <div class="field">
+      <label class="" for="organizationType">Company Type</label>
+      <p-dropdown [options]="companyTypeOptions"
+        [optionValue]="'value'"
+        [optionLabel]="'label'"
+        formControlName="organizationType"
+        inputId="organizationType"
+        [placeholder]="'Select a company type'">
+      </p-dropdown>
+    </div>
+    <div class="field">
+      <label class="" for="working_hours">Working Hours</label>
+      <input type="text" id="working_hours" formControlName="workingHours" pInputText>
+    </div>
+    <div class="field">
+      <label class="" for="og_size">Organization Size</label>
+      <input type="text" id="og_size" formControlName="organizationSize" pInputText>
+    </div>
+    <div *appShellAsideView class="tw-sticky tw-mt-auto tw-bottom-0 tw-w-full tw-px-10 tw-py-3 tw-flex tw-items-center tw-justify-end" style="background-color: var(--surface-card);">
+      <button [loading]="!!(userService.updatingProfile$ | async)" [disabled]="userType === 'individual' ? profileForm.invalid : profileOrganizationForm.invalid" pButton label="Save" style="max-width: 8rem" (click)="updateProfile()"></button>
     </div>
   </form>
 </div>
